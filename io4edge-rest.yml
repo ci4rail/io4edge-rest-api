@@ -1,0 +1,299 @@
+openapi: "3.0.2"
+info:
+  title: Io4edge API
+  version: "1.0"
+servers:
+  - url: https://my-io4edge-device/api/v1
+    description: Example Io4Edge Device
+tags:
+  - name: core
+    description: Common io4edge API
+  - name: app
+    description: Application specific API
+
+paths:
+  /users/{user}/basic_auth:
+    patch:
+      parameters:
+        - name: user
+          in: path
+          description: |-
+            User Name to update.
+            One of the following users can be used: 
+            - factory - access to all endpoints
+            - admin - access to all endpoints except update hardware info
+            - reader - access to all read-only endpoints
+          required: true
+          schema:
+            type: string
+      tags:
+        - core
+      summary: Update basic auth credentials
+      description: |-
+        Update basic auth credentials for the API.
+        Authentication with the current credentials is required.
+        Password must be at least 8 characters long.
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid password
+        "401":
+          description: Unauthorized
+        "404":
+          description: User not found
+  /firmware:
+    get:
+      tags:
+        - core
+      summary: Get firmware version
+      description: |-
+        Get firmware version of the device.
+        Authentication with at least reader credentials is required.
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FirmwareVersion"
+        "401":
+          description: Unauthorized
+    put:
+      tags:
+        - core
+      summary: Update firmware
+      description: |-
+        Update firmware of the device.
+        Authentication with at least admin credentials is required.
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Error during firmware update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Flash programming error"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden. Authentication with admin credentials is required.
+  /hardware:
+    get:
+      tags:
+        - core
+      summary: Get hardware information
+      description: |-
+        Get hardware information of the device.
+        Authentication with at least reader credentials is required.
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HardwareInventory"
+        "401":
+          description: Unauthorized
+    patch:
+      tags:
+        - core
+      summary: Update hardware information
+      description: |-
+        Update hardware information of the device.
+        Authentication with factory credentials is required.
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HardwareInventory"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden. Authentication with factory credentials is required.
+  /configuration:
+    get:
+      tags:
+        - app
+      summary: Get configuration version
+      description: |-
+        Get configuration version of the device and list the parameters that are not supported by the firmware.
+        Authentication with at least reader credentials is required.
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+                    example: "1.0"
+                  unsupported_parameters:
+                    description: List of unsupported parameters
+                    type: array
+                    items:
+                      type: string
+                    example: ["parameter1", "parameter2"]
+        "401":
+          description: Unauthorized
+    patch:
+      tags:
+        - app
+      summary: Update configuration
+      description: |-
+        Update configuration of the device. After the update, the device will restart.
+        Client should call configuration GET endpoint to check if the configuration was applied successfully.
+        Authentication with at least admin credentials is required.
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "version parameter missing"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden. Authentication with admin credentials is required.
+  /restart:
+    post:
+      tags:
+        - core
+      summary: Restart device
+      description: |-
+        Restart device.
+        Authentication with at least admin credentials is required.
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden. Authentication with admin credentials is required.
+  /metrics:
+    get:
+      tags:
+        - app
+      summary: Get metrics
+      description: |-
+        Get metrics in prometheus text format. 
+        Metrics are application specific.
+        Authentication with at least reader credentials is required.
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/PromMetrics"
+        "401":
+          description: Unauthorized
+
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    FirmwareVersion:
+      type: object
+      properties:
+        version:
+          type: string
+          example: "1.0.0-rc1"
+    HardwareInventory:
+      type: object
+      properties:
+        part_number:
+          type: string
+          example: "S103-SIO04"
+        serial_number:
+          type: string
+          example: "24891aa4-d098-4e7e-9a40-d07de788a928"
+        major_version:
+          type: integer
+          example: 1
+    Configuration:
+      type: object
+      properties:
+        version:
+          type: string
+          example: "1.0"
+        parameters:
+          type: object
+          properties:
+            parameter1:
+              type: string
+              example: "value1"
+            parameter2:
+              type: string
+              example: "value2"
+    PromMetrics:
+      type: string
+      example: |
+        # HELP gnss_fix_type_enum GNSS fix type (0-7)
+        # TYPE gnss_fix_type_enum gauge
+        gnss_fix_type_enum{} 1
+        # HELP gnss_eph_meters GNSS estimated horizontal position error (m)
+        # TYPE gnss_eph_meters gauge
+        gnss_eph_meters{} 3.800000
+        # HELP gnss_lat_degrees GNSS latidude (deg)
+        # TYPE gnss_lat_degrees gauge
+        gnss_lat_degrees{} 49.430775
+        # HELP gnss_lon_degrees GNSS longitude (deg)
+        # TYPE gnss_lon_degrees gauge
+        gnss_lon_degrees{} 11.071074
