@@ -2,35 +2,39 @@ openapi: "3.0.2"
 info:
   title: Io4edge API
   version: "1.0"
+  description: |-
+    This is the API documentation for io4edge devices using HTTPS.
+
+    The API is secured with basic auth with a single user name and password.
+    - user: "io4edge", default password: "core"
+
+    The password can be changed with the PATCH /users/io4edge/basic_auth endpoint.
+
+    The API is available at https://my-io4edge-device/api/v1
 servers:
   - url: https://my-io4edge-device/api/v1
     description: Example Io4Edge Device
 tags:
   - name: core
     description: Common io4edge API
-  - name: app
-    description: Application specific API
 
 paths:
   /users/{user}/basic_auth:
-    patch:
+    put:
       parameters:
         - name: user
           in: path
           description: |-
             User Name to update.
-            One of the following users can be used: 
-            - factory - access to all endpoints
-            - admin - access to all endpoints except update hardware info
-            - reader - access to all read-only endpoints
+            Currently only "io4edge" user is supported.
           required: true
           schema:
             type: string
       tags:
         - core
-      summary: Update basic auth credentials
+      summary: Update basic auth password
       description: |-
-        Update basic auth credentials for the API.
+        Update basic auth password for user.
         Authentication with the current credentials is required.
         Password must be at least 8 characters long.
       security:
@@ -43,6 +47,7 @@ paths:
               properties:
                 password:
                   type: string
+                  example: "AZ78z67c!99"
       responses:
         "200":
           description: OK
@@ -52,6 +57,27 @@ paths:
           description: Unauthorized
         "404":
           description: User not found
+  /certificate:
+    put:
+      tags:
+        - core
+      summary: Load certificate
+      description: |-
+        Upload the HTTPS server certificate to device. 
+        After the update, the server will restart with the updated certificate.
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/x-pem-file:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
   /firmware:
     get:
       tags:
@@ -59,7 +85,6 @@ paths:
       summary: Get firmware version
       description: |-
         Get firmware version of the device.
-        Authentication with at least reader credentials is required.
       security:
         - basicAuth: []
       responses:
@@ -74,10 +99,9 @@ paths:
     put:
       tags:
         - core
-      summary: Update firmware
+      summary: Load firmware
       description: |-
-        Update firmware of the device.
-        Authentication with at least admin credentials is required.
+        Upload firmware to the device.
       security:
         - basicAuth: []
       requestBody:
@@ -101,8 +125,6 @@ paths:
                     example: "Flash programming error"
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden. Authentication with admin credentials is required.
   /hardware:
     get:
       tags:
@@ -110,7 +132,6 @@ paths:
       summary: Get hardware information
       description: |-
         Get hardware information of the device.
-        Authentication with at least reader credentials is required.
       security:
         - basicAuth: []
       responses:
@@ -122,13 +143,12 @@ paths:
                 $ref: "#/components/schemas/HardwareInventory"
         "401":
           description: Unauthorized
-    patch:
+    put:
       tags:
         - core
-      summary: Update hardware information
+      summary: Load hardware information
       description: |-
-        Update hardware information of the device.
-        Authentication with factory credentials is required.
+        Upload hardware information to device. If hardware information is already set, the request will be rejected.
       security:
         - basicAuth: []
       requestBody:
@@ -141,16 +161,138 @@ paths:
           description: OK
         "401":
           description: Unauthorized
+        "423":
+          description: Locked. Hardware information can be updated only once.
+  /command/restart:
+    post:
+      tags:
+        - core
+      summary: Restart device
+      description: |-
+        Restart device.
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  /command/repl:
+    post:
+      tags:
+        - core
+      summary: Execute a registered REPL command
+      description: |-
+        Execute a registered REPL command.
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                command:
+                  description: Command name with parameters
+                  type: string
+                  example: "heap"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    description: Command result
+                    type: string
+                    example: "Free heap: 125466 bytes"
+        "400":
+          description: Invalid command or command failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Command not found"
+        "401":
+          description: Unauthorized
+  /parameter/{parameter}:
+    get:
+      tags:
+        - core
+      summary: Get parameter value
+      description: |-
+        Get parameter value.
+        Parameter name must be a valid parameter name known to the firmware.
+      security:
+        - basicAuth: []
+      parameters:
+        - name: parameter
+          in: path
+          description: |-
+            Parameter name.
+          required: true
+          schema:
+            type: string
+            example: "device-id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value:
+                    description: Parameter value
+                    type: string
+                    example: "my-device"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Parameter not found
         "403":
-          description: Forbidden. Authentication with factory credentials is required.
+          description: Forbidden. Parameter is read-protected.
+    put:
+      tags:
+        - core
+      summary: Set parameter value
+      description: |-
+        Set parameter value.
+        Parameter name must be a valid parameter name known to the firmware.
+        If the parameter is already set by the configuration, the request will be rejected.
+      security:
+        - basicAuth: []
+      parameters:
+        - name: parameter
+          in: path
+          description: |-
+            Parameter name.
+          required: true
+          schema:
+            type: string
+            example: "device-id"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "404":
+          description: Parameter not found
+        "423":
+          description: Parameter is part of configuration and cannot be changed by this endpoint
   /configuration:
     get:
       tags:
-        - app
+        - core
       summary: Get configuration version
       description: |-
-        Get configuration version of the device and list the parameters that are not supported by the firmware.
-        Authentication with at least reader credentials is required.
+        Get configuration version of the device and list the parameters that are not supported 
+        by the firmware or missing in configuration.
       security:
         - basicAuth: []
       responses:
@@ -165,21 +307,26 @@ paths:
                     type: string
                     example: "1.0"
                   unsupported_parameters:
-                    description: List of unsupported parameters
+                    description: List of parameters in configuration that are not supported by the firmware.
                     type: array
                     items:
                       type: string
                     example: ["parameter1", "parameter2"]
+                  missing_parameters:
+                    description: List of parameters that are expected by firmware but missing in configuration.
+                    type: array
+                    items:
+                      type: string
+                    example: ["parameter3"]
         "401":
           description: Unauthorized
     patch:
       tags:
-        - app
-      summary: Update configuration
+        - core
+      summary: Load configuration
       description: |-
-        Update configuration of the device. After the update, the device will restart.
+        Upload configuration to device. After the update, the device will restart.
         Client should call configuration GET endpoint to check if the configuration was applied successfully.
-        Authentication with at least admin credentials is required.
       security:
         - basicAuth: []
       requestBody:
@@ -202,34 +349,14 @@ paths:
                     example: "version parameter missing"
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden. Authentication with admin credentials is required.
-  /restart:
-    post:
-      tags:
-        - core
-      summary: Restart device
-      description: |-
-        Restart device.
-        Authentication with at least admin credentials is required.
-      security:
-        - basicAuth: []
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden. Authentication with admin credentials is required.
   /metrics:
     get:
       tags:
-        - app
+        - core
       summary: Get metrics
       description: |-
         Get metrics in prometheus text format. 
         Metrics are application specific.
-        Authentication with at least reader credentials is required.
       security:
         - basicAuth: []
       responses:
@@ -241,7 +368,6 @@ paths:
                 $ref: "#/components/schemas/PromMetrics"
         "401":
           description: Unauthorized
-
 
 components:
   securitySchemes:
