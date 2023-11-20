@@ -36,7 +36,7 @@ paths:
       description: |-
         Update basic auth password for user.
         Authentication with the current credentials is required.
-        Password must be at least 8 characters long.
+        Password must be between 8 an 64 characters long.
       security:
         - basicAuth: []
       requestBody:
@@ -52,11 +52,23 @@ paths:
         "200":
           description: OK
         "400":
-          description: Invalid password
+          description: Invalid password, password missing, password length invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
         "401":
           description: Unauthorized
-        "404":
-          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        "500":
+          description: Internal server error, e.g. store password failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
   /certificate:
     put:
       tags:
@@ -64,20 +76,72 @@ paths:
       summary: Load certificate
       description: |-
         Upload the HTTPS server certificate to device. 
-        After the update, the server will restart with the updated certificate.
+        Note that the certificate must match the private key already stored on the device.
+        You may change the private key with the /key endpoint.
       security:
         - basicAuth: []
       requestBody:
-        content:
-          application/x-pem-file:
-            schema:
-              type: string
-              format: binary
+         content:
+            application/x-pem-file:
+              schema:
+                type: string
+                format: binary
+                example: |
+                  -----BEGIN CERTIFICATE-----
+                  MIIDXTCCAkWgAwIBAgIJAK7Z3Z3Z3Z3ZMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+                  ...
+                  -----END CERTIFICATE-----
       responses:
         "200":
           description: OK
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        "500":
+          description: Internal server error, e.g. store certificate failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+  /key:
+    put:
+      tags:
+        - core
+      summary: Load private key
+      description: |-
+        Upload the private key to device. 
+        Note that the private key must match the certificate already stored on the device.
+        You may change the certificate with the /certificate endpoint.
+      security:
+        - basicAuth: []
+      requestBody:
+         content:
+            application/x-pem-file:
+              schema:
+                type: string
+                format: binary
+                example: |
+                  -----BEGIN RSA PRIVATE KEY-----
+                  ...
+                  -----END PRIVATE KEY-----
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        "500":
+          description: Internal server error, e.g. store private key failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
   /firmware:
     get:
       tags:
@@ -96,6 +160,16 @@ paths:
                 $ref: "#/components/schemas/FirmwareVersion"
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        "500":
+          description: Internal server error, e.g. read firmware version failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
     put:
       tags:
         - core
@@ -118,13 +192,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: "Flash programming error"
+                $ref: "#/components/schemas/ErrorInfo"
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        "500":
+          description: Internal server error, e.g. no memory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
   /hardware:
     get:
       tags:
@@ -143,6 +223,16 @@ paths:
                 $ref: "#/components/schemas/HardwareInventory"
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        "500":
+          description: Internal server error, e.g. no inventory information available
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
     put:
       tags:
         - core
@@ -161,8 +251,16 @@ paths:
           description: OK
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
         "423":
           description: Locked. Hardware information can be updated only once.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
   /command/restart:
     post:
       tags:
@@ -177,6 +275,10 @@ paths:
           description: OK
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
   /command/repl:
     post:
       tags:
@@ -213,13 +315,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: "Command not found"
+                $ref: "#/components/schemas/ErrorInfo"
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
   /parameter/{parameter}:
     get:
       tags:
@@ -253,10 +355,22 @@ paths:
                     example: "my-device"
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
         "404":
           description: Parameter not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
         "403":
           description: Forbidden. Parameter is read-protected.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
     put:
       tags:
         - core
@@ -281,10 +395,22 @@ paths:
           description: OK
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
         "404":
           description: Parameter not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
         "423":
           description: Parameter is part of configuration and cannot be changed by this endpoint
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
   /configuration:
     get:
       tags:
@@ -320,7 +446,11 @@ paths:
                     example: ["parameter3"]
         "401":
           description: Unauthorized
-    patch:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+    put:
       tags:
         - core
       summary: Load configuration
@@ -342,32 +472,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: "version parameter missing"
+                $ref: "#/components/schemas/ErrorInfo"
         "401":
           description: Unauthorized
-  /metrics:
-    get:
-      tags:
-        - core
-      summary: Get metrics
-      description: |-
-        Get metrics in prometheus text format. 
-        Metrics are application specific.
-      security:
-        - basicAuth: []
-      responses:
-        "200":
-          description: OK
           content:
-            text/plain:
+            application/json:
               schema:
-                $ref: "#/components/schemas/PromMetrics"
-        "401":
-          description: Unauthorized
+                $ref: "#/components/schemas/ErrorInfo"
 
 components:
   securitySchemes:
@@ -375,9 +486,23 @@ components:
       type: http
       scheme: basic
   schemas:
+    ErrorInfo:
+      type: object
+      properties:
+        code:
+          description: Error code identifying the module and error
+          type: string
+          example: "auth-0001"
+        message:
+          description: Error message
+          type: string
+          example: "invalid password"
     FirmwareVersion:
       type: object
       properties:
+        name:
+          type: string
+          example: "fw_sio04_01_default"
         version:
           type: string
           example: "1.0.0-rc1"
@@ -408,18 +533,3 @@ components:
             parameter2:
               type: string
               example: "value2"
-    PromMetrics:
-      type: string
-      example: |
-        # HELP gnss_fix_type_enum GNSS fix type (0-7)
-        # TYPE gnss_fix_type_enum gauge
-        gnss_fix_type_enum{} 1
-        # HELP gnss_eph_meters GNSS estimated horizontal position error (m)
-        # TYPE gnss_eph_meters gauge
-        gnss_eph_meters{} 3.800000
-        # HELP gnss_lat_degrees GNSS latidude (deg)
-        # TYPE gnss_lat_degrees gauge
-        gnss_lat_degrees{} 49.430775
-        # HELP gnss_lon_degrees GNSS longitude (deg)
-        # TYPE gnss_lon_degrees gauge
-        gnss_lon_degrees{} 11.071074
