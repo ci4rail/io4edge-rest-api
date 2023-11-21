@@ -1,0 +1,86 @@
+get:
+  tags:
+    - core
+  summary: Get configuration of time positioning device
+  description: |-
+    Get configuration version and parameters of the device and list the parameters that are not supported 
+    by the firmware or missing in configuration.
+
+    Note that the parameters in this configuration use a separate flash namespace as the global parameters that
+    can be set with the /parameter/{parameter} endpoint. 
+
+    Available parameters:
+    - sby-shutdown - (e.g. "60") time after which device enters standby mode when ignition is off in seconds
+    - sby-wakeup-interval - (e.g. "600") wakeup interval during standby state in seconds
+    - ntp-stratum-gnss - (e.g. "1") reported stratum value when GNSS is used as a time source
+    - ntp-stratum-rtc - (e.g. "3") reported stratum value when RTC is used as a time source
+    - pos-udp-address - (e.g. "232.10.11.12:1234") "UDP destination address and port for GPS2UDP packets. Supports unicast, multicast and broadcast addresses
+    - pos-ntrip-caster - (e.g. "caster.example.com:2101:MOUNTPOINT") NTRIP caster address, port and mountpoint
+    - pos-ntrip-creds - (e.g. "username:password") NTRIP caster credentials
+    - pos-dynmodel - (e.g. "automotive") GNSS dynamic model
+    - pos-have-wt - (e.g. "true") Configure if wheel tick information is available
+    - pos-have-wt-dir - (e.g. "true") Configure if wheel tick direction information is available
+
+    The following parameters define the relative positions between the device (DEV), the antenna (ANT), 
+    the vehicle rotation position (VRP) and the configurable reference point (CRP). See UBLOX ZEDF9R integration manual
+    for more information. Each parameter is a comma separated list of three floating point numbers (x,y,z) in meters.
+    - pos-dev2crp - (e.g. "0.0,0.0,0.0") IMU to CRP offset
+    - pos-dev2ant - (e.g. "0.0,0.0,0.0") IMU to ANT offset
+    - pos-dev2vrp - (e.g. "0.0,0.0,0.0") IMU to VRP offset
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../../core/schemas/configuration.yml"
+              - type: object
+                properties:
+                  unsupported_parameters:
+                    description: List of parameters in configuration that are not supported by the firmware.
+                    type: array
+                    items:
+                      type: string
+                    example: ["parameter1", "parameter2"]
+                  missing_parameters:
+                    description: List of parameters that are expected by firmware but missing in configuration.
+                    type: array
+                    items:
+                      type: string
+                    example: ["parameter3"]
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"
+put:
+  tags:
+    - core
+  summary: Load configuration of time positioning device
+  description: |-
+    Upload configuration to device. After the update, the device will restart.
+    Client should call configuration GET endpoint to check if the configuration was applied successfully.
+    See GET /configuration for available parameters.
+    If a parameter is not set in the configuration, the default value will be used.
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/configuration.yml"
+  responses:
+    "200":
+      description: OK
+    "400":
+      description: Invalid configuration
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/schemas/error_info.yml"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"

@@ -1,0 +1,41 @@
+put:
+  parameters:
+    - name: user
+      in: path
+      description: |-
+        User Name to update.
+        Currently only "io4edge" user is supported.
+      required: true
+      schema:
+        type: string
+  tags:
+    - core
+  summary: Update basic auth password
+  description: |-
+    Update basic auth password for user.
+    Authentication with the current credentials is required.
+    Password must be between 8 an 64 characters long.
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            password:
+              type: string
+              example: "AZ78z67c!99"
+  responses:
+    "200":
+      description: OK
+    "400":
+      description: Invalid password, password missing, password length invalid
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error_info.yml"
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"

@@ -1,0 +1,46 @@
+get:
+  tags:
+    - core
+  summary: Get firmware version
+  description: |-
+    Get firmware version of the device.
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/firmware_version.yml"
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"
+put:
+  tags:
+    - core
+  summary: Load firmware
+  description: |-
+    Upload firmware to the device.
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/octet-stream:
+        schema:
+          type: string
+          format: binary
+  responses:
+    "200":
+      description: OK
+    "400":
+      description: Error during firmware update
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error_info.yml"
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"

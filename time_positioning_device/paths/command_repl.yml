@@ -1,0 +1,50 @@
+post:
+  tags:
+    - core
+  summary: Execute a registered REPL command
+  description: |-
+    Execute a registered REPL command.
+
+    - device_id - Set/Get Device ID - Device ID is used to identify the device in the network (e.g. via mdns)
+    - static-ip - Set/Get static IP address, network mask and gateway. If not set, DHCP is used.
+    - ps - show running threads
+    - heap - Get free heap
+    - reboot - Restart device
+    - log-level - Set/Get log level (0=NONE 1=ERROR 2=WARN 3=INFO 4=DEBUG 5=VERBOSE)
+    - hw-inv - Set/Get hardware inventory 
+    - Further commands may be added later...
+
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            command:
+              description: Command name with parameters
+              type: string
+              example: "heap"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              result:
+                description: Command result
+                type: string
+                example: "Free heap: 125466 bytes"
+    "400":
+      description: Invalid command or command failed
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/schemas/error_info.yml"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"

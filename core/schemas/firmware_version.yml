@@ -1,0 +1,8 @@
+type: object
+properties:
+  name:
+    type: string
+    example: "fw_sio04_01_default"
+  version:
+    type: string
+    example: "1.0.0-rc1"

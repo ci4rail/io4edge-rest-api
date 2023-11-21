@@ -1,0 +1,14 @@
+type: object
+properties:
+  version:
+    type: string
+    example: "1.0"
+  parameters:
+    type: object
+    properties:
+      parameter1:
+        type: string
+        example: "value1"
+      parameter2:
+        type: string
+        example: "value2"

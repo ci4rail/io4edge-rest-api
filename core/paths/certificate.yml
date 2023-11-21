@@ -1,0 +1,28 @@
+put:
+  tags:
+    - core
+  summary: Load certificate
+  description: |-
+    Upload the HTTPS server certificate to device. 
+    Note that the certificate must match the private key already stored on the device.
+    You may change the private key with the `/key` endpoint.
+  security:
+    - basicAuth: []
+  requestBody:
+      content:
+        application/x-pem-file:
+          schema:
+            type: string
+            format: binary
+            example: |
+              -----BEGIN CERTIFICATE-----
+              MIIDXTCCAkWgAwIBAgIJAK7Z3Z3Z3Z3ZMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+              ...
+              -----END CERTIFICATE-----
+  responses:
+    "200":
+      description: OK
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"

@@ -1,0 +1,15 @@
+post:
+  tags:
+    - core
+  summary: Restart device
+  description: |-
+    Restart device.
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      description: OK
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"

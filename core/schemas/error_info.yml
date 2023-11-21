@@ -1,0 +1,10 @@
+type: object
+properties:
+  code:
+    description: Error code identifying the module and error
+    type: string
+    example: "auth-0001"
+  message:
+    description: Error message
+    type: string
+    example: "invalid password"

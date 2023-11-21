@@ -1,0 +1,53 @@
+get:
+  tags:
+    - core
+  summary: Get hardware information
+  description: |-
+    Get hardware information of the device.
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/hardware_inventory.yml"
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"
+put:
+  tags:
+    - core
+  summary: Load hardware information
+  description: |-
+    Upload hardware information to device. If hardware information is already set, the request will be rejected.
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/hardware_inventory.yml"
+  responses:
+    "200":
+      description: OK
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "423":
+      description: Locked. Hardware information can be updated only once.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/error_info.yml"
+              - type: object
+                properties:
+                  code:
+                    example: "hw-0002"
+                  message:
+                    example: "hardware inventory data already set"              
+    "500":
+      $ref: "../responses/internal_server_error.yml"

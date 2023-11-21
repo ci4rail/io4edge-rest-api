@@ -1,0 +1,82 @@
+get:
+  tags:
+    - core
+  summary: Get value of a global parameter
+  description: |-
+    Get value of a global parameter.
+    Parameter name must be a valid parameter name known to the firmware.
+
+    Available parameters:
+    - device-id
+    - static-ip
+
+  security:
+    - basicAuth: []
+  parameters:
+    - name: parameter
+      in: path
+      description: |-
+        Parameter name.
+      required: true
+      schema:
+        type: string
+        example: "device-id"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              value:
+                description: Parameter value
+                type: string
+                example: "my-device"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "404":
+      description: Parameter not found
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/schemas/error_info.yml"
+    "403":
+      description: Forbidden. Parameter is read-protected.
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/schemas/error_info.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"
+
+put:
+  tags:
+    - core
+  summary: Set value of global parameter
+  description: |-
+    Set value of global parameter. 
+    Parameter name must be a valid parameter name known to the firmware.
+    See GET /parameter/{parameter} for available parameters.
+  security:
+    - basicAuth: []
+  parameters:
+    - name: parameter
+      in: path
+      description: |-
+        Parameter name.
+      required: true
+      schema:
+        type: string
+        example: "device-id"
+  responses:
+    "200":
+      description: OK
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "404":
+      description: Parameter not found
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/schemas/error_info.yml"

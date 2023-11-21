@@ -1,0 +1,12 @@
+description: Internal server error
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: "../schemas/error_info.yml"
+        - type: object
+          properties:
+            code:
+              example: "gen-0001"
+            message:
+              example: "out of memory"

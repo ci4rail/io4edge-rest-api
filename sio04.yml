@@ -1,0 +1,43 @@
+openapi: "3.0.2"
+info:
+  title: SIO04 API
+  version: "1.0"
+  description: |-
+    This is the API documentation for io4edge devices using HTTPS.
+
+    The API is secured with basic auth with a single user name and password.
+    - user: "io4edge", default password: "core"
+
+    The password can be changed with the PATCH /users/io4edge/basic_auth endpoint.
+
+    The API is available at https://my-io4edge-device/api/v1
+servers:
+  - url: https://my-io4edge-device/api/v1
+    description: Example Io4Edge Device
+tags:
+  - name: core
+    description: Common io4edge API
+
+paths:
+  /users/{user}/basic_auth:
+    $ref: "./core/paths/auth_basic.yml"
+  /certificate:
+    $ref: "./core/paths/certificate.yml"
+  /key:
+    $ref: "./core/paths/key.yml"
+  /firmware:
+    $ref: "./core/paths/firmware.yml"
+  /hardware:
+    $ref: "./time_positioning_device/paths/hardware.yml"
+  /command/restart:
+    $ref: "./core/paths/command_restart.yml"
+  /command/repl:
+    $ref: "./time_positioning_device/paths/command_repl.yml"
+  /parameter/{parameter}:
+    $ref: "./time_positioning_device/paths/parameter.yml"
+  /tps/configuration:
+    $ref: "./time_positioning_device/paths/configuration.yml"
+
+components:
+  securitySchemes:
+    $ref: ./core/security_schemes/all.yml

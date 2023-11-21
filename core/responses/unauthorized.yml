@@ -1,0 +1,12 @@
+description: Unauthorized
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: "../schemas/error_info.yml"
+        - type: object
+          properties:
+            code:
+              example: "auth-0006"
+            message:
+              example: "wrong password"

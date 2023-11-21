@@ -1,0 +1,11 @@
+type: object
+properties:
+  part_number:
+    type: string
+    example: "S103-SIO04"
+  serial_number:
+    type: string
+    example: "24891aa4-d098-4e7e-9a40-d07de788a928"
+  major_version:
+    type: integer
+    example: 1
