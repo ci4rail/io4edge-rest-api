@@ -6,6 +6,7 @@ put:
     Upload the HTTPS server certificate to device. 
     Note that the certificate must match the private key already stored on the device.
     You may change the private key with the `/key` endpoint.
+    The new certificate will be used after the next restart.
   security:
     - basicAuth: []
   requestBody:

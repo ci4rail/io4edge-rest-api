@@ -1,11 +1,17 @@
 type: object
 properties:
   part_number:
+    description: Ci4Rail part number
     type: string
     example: "S103-SIO04"
   serial_number:
+    description: A UUIDV4 serial number that unqiuely identifies the device
     type: string
     example: "24891aa4-d098-4e7e-9a40-d07de788a928"
   major_version:
+    description: |-
+      Major version of the hardware, independent from the software version.
+
+      The hardware major number is increased when breaking changes are introduced in the hardware.
     type: integer
     example: 1

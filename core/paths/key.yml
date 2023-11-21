@@ -6,18 +6,21 @@ put:
     Upload the private key to device. 
     Note that the private key must match the certificate already stored on the device.
     You may change the certificate with the `/certificate` endpoint.
+
+    The new key will be used after the next restart.
+
   security:
     - basicAuth: []
   requestBody:
-      content:
-        application/x-pem-file:
-          schema:
-            type: string
-            format: binary
-            example: |
-              -----BEGIN RSA PRIVATE KEY-----
-              ...
-              -----END PRIVATE KEY-----
+    content:
+      application/x-pem-file:
+        schema:
+          type: string
+          format: binary
+          example: |
+            -----BEGIN RSA PRIVATE KEY-----
+            ...
+            -----END PRIVATE KEY-----
   responses:
     "200":
       description: OK

@@ -3,7 +3,7 @@ info:
   title: SIO04 API
   version: "1.0"
   description: |-
-    This is the API documentation for io4edge devices using HTTPS.
+    This is the API documentation for SIO04 devices using HTTPS.
 
     The API is secured with basic auth with a single user name and password.
     - user: "io4edge", default password: "core"
@@ -17,6 +17,8 @@ servers:
 tags:
   - name: core
     description: Common io4edge API
+  - name: app
+    description: Application specific API
 
 paths:
   /users/{user}/basic_auth:

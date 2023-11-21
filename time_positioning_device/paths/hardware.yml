@@ -4,6 +4,8 @@ get:
   summary: Get hardware information
   description: |-
     Get hardware information of the device.
+
+    This information is also printed on the device label.
   security:
     - basicAuth: []
   responses:
@@ -24,7 +26,13 @@ put:
     - core
   summary: Load hardware information
   description: |-
-    Upload hardware information to device. If hardware information is already set, the request will be rejected.
+    Upload hardware information to device. 
+    
+    If hardware information is already set, the request will be rejected.
+
+    The hardware information is set during the manufacturing process.
+
+    A factory reset will not reset the hardware information.
   security:
     - basicAuth: []
   requestBody:

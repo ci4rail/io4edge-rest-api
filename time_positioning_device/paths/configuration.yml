@@ -1,6 +1,6 @@
 get:
   tags:
-    - core
+    - app
   summary: Get configuration of time positioning device
   description: |-
     Get configuration version and parameters of the device and list the parameters that are not supported 
@@ -40,7 +40,9 @@ get:
               - type: object
                 properties:
                   unsupported_parameters:
-                    description: List of parameters in configuration that are not supported by the firmware.
+                    description: |-
+                      List of parameters in configuration that are not supported by the firmware, (e.g.
+                      because the firmware is too old).
                     type: array
                     items:
                       type: string
@@ -57,7 +59,7 @@ get:
       $ref: "../../core/responses/internal_server_error.yml"
 put:
   tags:
-    - core
+    - app
   summary: Load configuration of time positioning device
   description: |-
     Upload configuration to device. After the update, the device will restart.

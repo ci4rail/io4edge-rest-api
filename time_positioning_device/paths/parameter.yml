@@ -7,8 +7,8 @@ get:
     Parameter name must be a valid parameter name known to the firmware.
 
     Available parameters:
-    - device-id
-    - static-ip
+    - device-id - (e.g. "my-device") to identify the device in the network (e.g. via mdns)
+    - static-ip - (e.g. "192.168.11.11:255.255.255.0:192.168.11.1") static IP address, network mask and gateway. If not set, DHCP is used.
 
   security:
     - basicAuth: []
