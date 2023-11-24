@@ -47,6 +47,4 @@ paths:
 
 components:
   securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
+    $ref: ./core/security_schemes/all.yml
