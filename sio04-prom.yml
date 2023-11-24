@@ -7,9 +7,6 @@ info:
 
     The API is available at http://my-io4edge-device:9100/metrics.
 
-    Performance note: Due to hardware limitations, the initial TLS handshake can take up to 2 seconds.
-    Clients should reuse the TLS session where possible to avoid this delay.
-
 servers:
   - url: http://my-io4edge-device:9100/metrics
     description: Example SIO04
