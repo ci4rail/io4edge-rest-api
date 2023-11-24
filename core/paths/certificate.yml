@@ -4,22 +4,24 @@ put:
   summary: Load certificate
   description: |-
     Upload the HTTPS server certificate to device. 
+
     Note that the certificate must match the private key already stored on the device.
     You may change the private key with the `/key` endpoint.
-    The new certificate will be used after the next restart.
+
+    The new certificate will be used after the next restart, which can be triggered with the `/command/restart` endpoint.
   security:
     - basicAuth: []
   requestBody:
-      content:
-        application/x-pem-file:
-          schema:
-            type: string
-            format: binary
-            example: |
-              -----BEGIN CERTIFICATE-----
-              MIIDXTCCAkWgAwIBAgIJAK7Z3Z3Z3Z3ZMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
-              ...
-              -----END CERTIFICATE-----
+    content:
+      application/x-pem-file:
+        schema:
+          type: string
+          format: binary
+          example: |
+            -----BEGIN CERTIFICATE-----
+            MIIDXTCCAkWgAwIBAgIJAK7Z3Z3Z3Z3ZMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+            ...
+            -----END CERTIFICATE-----
   responses:
     "200":
       description: OK

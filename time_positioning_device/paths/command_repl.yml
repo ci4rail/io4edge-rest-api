@@ -4,6 +4,9 @@ post:
   summary: Execute a registered REPL command
   description: |-
     Execute a registered REPL command.
+    The response contains the output of the command.
+    Note that "200" is returned even if the command failed.
+    If the command failed, the last line is `command returned failure 1`.
 
     - device_id - Set/Get Device ID - Device ID is used to identify the device in the network (e.g. via mdns)
     - static-ip - Set/Get static IP address, network mask and gateway. If not set, DHCP is used.
@@ -18,33 +21,31 @@ post:
     - basicAuth: []
   requestBody:
     content:
-      application/json:
+      text/plain:
         schema:
-          type: object
-          properties:
-            command:
-              description: Command name with parameters
-              type: string
-              example: "heap"
+          type: string
+          example: "heap"
   responses:
     "200":
       description: OK
       content:
-        application/json:
+        text/plain:
           schema:
-            type: object
-            properties:
-              result:
-                description: Command result
-                type: string
-                example: "Free heap: 125466 bytes"
+            type: string
+            example: |-
+              Free heap: 125466 bytes
     "400":
-      description: Invalid command or command failed
+      description: Invalid command
       content:
         application/json:
           schema:
-            $ref: "../../core/schemas/error_info.yml"
+            allOf:
+              - $ref: "../../core/schemas/error_info.yml"
+              - type: object
+                properties:
+                  code:
+                    example: "cmd-0001"
+                  message:
+                    example: "command not found"
     "401":
       $ref: "../../core/responses/unauthorized.yml"
-    "500":
-      $ref: "../../core/responses/internal_server_error.yml"

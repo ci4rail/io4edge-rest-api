@@ -12,6 +12,7 @@ get:
     Available parameters:
     - sby-shutdown - (e.g. "60") time after which device enters standby mode when ignition is off in seconds
     - sby-wakeup-interval - (e.g. "600") wakeup interval during standby state in seconds
+    - sby-refresh-timeout - (e.g. "240") time after which device aborts refresh state when no GNSS signal is available (in seconds)
     - ntp-stratum-gnss - (e.g. "1") reported stratum value when GNSS is used as a time source
     - ntp-stratum-rtc - (e.g. "3") reported stratum value when RTC is used as a time source
     - pos-udp-address - (e.g. "232.10.11.12:1234") "UDP destination address and port for GPS2UDP packets. Supports unicast, multicast and broadcast addresses
