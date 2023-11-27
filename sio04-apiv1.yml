@@ -40,9 +40,9 @@ paths:
     $ref: "./core/paths/command_restart.yml"
   /command/repl:
     $ref: "./time_positioning_device/paths/command_repl.yml"
-  /parameter/{parameter}:
+  /parameter/global/{parameter}:
     $ref: "./time_positioning_device/paths/parameter.yml"
-  /tps/configuration:
+  /configuration/tps:
     $ref: "./time_positioning_device/paths/configuration.yml"
 
 components:

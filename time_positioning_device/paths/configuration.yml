@@ -6,9 +6,6 @@ get:
     Get configuration version and parameters of the device and list the parameters that are not supported 
     by the firmware or missing in configuration.
 
-    Note that the parameters in this configuration use a separate flash namespace as the global parameters that
-    can be set with the /parameter/{parameter} endpoint. 
-
     Available parameters:
     - sby-shutdown - (e.g. "60") time after which device enters standby mode when ignition is off in seconds
     - sby-wakeup-interval - (e.g. "600") wakeup interval during standby state in seconds
@@ -47,13 +44,13 @@ get:
                     type: array
                     items:
                       type: string
-                    example: ["parameter1", "parameter2"]
+                    example: ["parameter3", "parameter4"]
                   missing_parameters:
                     description: List of parameters that are expected by firmware but missing in configuration.
                     type: array
                     items:
                       type: string
-                    example: ["parameter3"]
+                    example: ["parameter5"]
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "500":
@@ -63,10 +60,18 @@ put:
     - app
   summary: Load configuration of time positioning device
   description: |-
-    Upload configuration to device. After the update, the device will restart.
+    Upload configuration to device.
     Client should call configuration GET endpoint to check if the configuration was applied successfully.
     See GET /configuration for available parameters.
+
     If a parameter is not set in the configuration, the default value will be used.
+
+    If a parameter contains an invalid value, the configuration will not be applied and the device will return an error.
+
+    If a parameter is not supported by the firmware, the configuration will be appplied, but the parameter will be ignored.
+
+    The device should be restarted after configuration is applied.
+
   security:
     - basicAuth: []
   requestBody:
