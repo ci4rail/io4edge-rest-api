@@ -1,30 +1,17 @@
 get:
   tags:
-    - app
-  summary: Get configuration of time positioning device
+    - vwu
+  summary: Get configuration of vehicle wakeup unit
   description: |-
     Get configuration version and parameters of the device and list the parameters that are not supported 
     by the firmware or missing in configuration.
 
     Available parameters:
-    - sby-shutdown - (e.g. "60") time after which device enters standby mode when ignition is off in seconds
-    - sby-wakeup-iv - (e.g. "600") wakeup interval during standby state in seconds
-    - sby-refresh-to - (e.g. "240") time after which device aborts refresh state when no GNSS signal is available (in seconds)
-    - ntp-strat-gnss - (e.g. "1") reported stratum value when GNSS is used as a time source
-    - ntp-strat-rtc - (e.g. "3") reported stratum value when RTC is used as a time source
-    - pos-udp-address - (e.g. "232.10.11.12:1234") "UDP destination address and port for GPS2UDP packets. Supports unicast, multicast and broadcast addresses
-    - pos-ntrip-caster - (e.g. "caster.example.com:2101:MOUNTPOINT") NTRIP caster address, port and mountpoint
-    - pos-ntrip-creds - (e.g. "username:password") NTRIP caster credentials
-    - pos-dynmodel - (e.g. "automotive") GNSS dynamic model
-    - pos-have-wt - (e.g. "true") Configure if wheel tick information is available
-    - pos-have-wt-dir - (e.g. "true") Configure if wheel tick direction information is available
-
-    The following parameters define the relative positions between the device (DEV), the antenna (ANT), 
-    the vehicle rotation position (VRP) and the configurable reference point (CRP). See UBLOX ZEDF9R integration manual
-    for more information. Each parameter is a comma separated list of three floating point numbers (x,y,z) in meters.
-    - pos-dev2crp - (e.g. "0.0,0.0,0.0") IMU to CRP offset
-    - pos-dev2ant - (e.g. "0.0,0.0,0.0") IMU to ANT offset
-    - pos-dev2vrp - (e.g. "0.0,0.0,0.0") IMU to VRP offset
+    - rel-hold - (e.g. "1.0") time in seconds until relay is deactivated
+    - rel-comid - (e.g. "A2F66F23") ComID of TRDP relay sink, in hex notation
+    - input-comid - (e.g. "A2F66F24") ComID of TRDP "inputs" source, in hex notation
+    - input-pubper - (e.g. "3.2") publishing period of TRDP "inputs" in Hz
+   
   security:
     - basicAuth: []
   responses:
@@ -57,8 +44,8 @@ get:
       $ref: "../../core/responses/internal_server_error.yml"
 put:
   tags:
-    - app
-  summary: Load configuration of time positioning device
+    - vwu
+  summary: Load configuration of vehicle wakeup unit
   description: |-
     Upload configuration to device.
     Client should call configuration GET endpoint to check if the configuration was applied successfully.

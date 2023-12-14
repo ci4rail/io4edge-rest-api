@@ -1,0 +1,5 @@
+type: object
+properties:
+  siemens_part_number:
+    type: string
+    example: "A2V1234"

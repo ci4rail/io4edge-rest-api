@@ -1,0 +1,37 @@
+openapi: "3.0.2"
+info:
+  title: SIO06 Prometheus Metrics API
+  version: "0.0.1"
+  description: |-
+    This is the API documentation to get prometheus metrics from SIO06 devices using HTTP.
+
+    The API is available at http://my-io4edge-device:9100/metrics.
+
+servers:
+  - url: http://my-io4edge-device:9100/metrics
+    description: Example SIO06
+
+paths:
+  /metrics:
+    get:
+      summary: Get prometheus metrics
+      description: |-
+        Get prometheus metrics from the device.
+
+        The metrics are served in the prometheus text format.
+
+        Detailed list of metrics is TBD
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |-
+                  # HELP free_heap_bytes
+                  # TYPE free_heap_bytes gauge
+                  free_heap_bytes{} 122884
+        "500":
+          description: Internal Server Error
+
