@@ -22,8 +22,8 @@ servers:
 tags:
   - name: core
     description: Common io4edge API
-  - name: app
-    description: Application specific API
+  - name: tps
+    description: Time/Positioning device specific API
 
 paths:
   /users/{user}/basic_auth:
@@ -51,4 +51,11 @@ components:
       type: http
       scheme: basic
   schemas:
-    $ref: "./core/schemas/_index.yml"
+    ErrorInfo:
+      $ref: "./time_positioning_device/components.yml#/components/schemas/ErrorInfo"
+    FirmwareVersion:
+      $ref: "./time_positioning_device/components.yml#/components/schemas/FirmwareVersion"
+    HardwareInventory:
+      $ref: "./time_positioning_device/components.yml#/components/schemas/HardwareInventory"
+    Configuration:
+      $ref: "./time_positioning_device/components.yml#/components/schemas/Configuration"

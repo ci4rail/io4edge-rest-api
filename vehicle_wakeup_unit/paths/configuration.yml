@@ -21,7 +21,7 @@ get:
         application/json:
           schema:
             allOf:
-              - $ref: "../../core/schemas/configuration.yml"
+              - $ref: "../../core/components.yml#/components/schemas/Configuration"
               - type: object
                 properties:
                   unsupported_parameters:
@@ -65,7 +65,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "../schemas/configuration.yml"
+          $ref: "../components.yml#/components/schemas/Configuration"
   responses:
     "200":
       description: OK
@@ -74,7 +74,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: "../../core/schemas/error_info.yml"
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "500":

@@ -42,7 +42,7 @@ paths:
     $ref: "./vehicle_wakeup_unit/paths/command_repl.yml"
   /parameter/global/{parameter}:
     $ref: "./vehicle_wakeup_unit/paths/parameter.yml"
-  /configuration/tps:
+  /configuration/vwu:
     $ref: "./vehicle_wakeup_unit/paths/configuration.yml"
 
 components:
@@ -50,3 +50,12 @@ components:
     basicAuth:
       type: http
       scheme: basic
+  schemas:
+    ErrorInfo:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ErrorInfo"
+    FirmwareVersion:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/FirmwareVersion"
+    HardwareInventory:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/HardwareInventory"
+    Configuration:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/Configuration"

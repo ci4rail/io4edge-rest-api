@@ -1,8 +1,0 @@
-Configuration:
-  $ref: "./configuration.yml"
-ErrorInfo:
-  $ref: "./error_info.yml"
-FirmwareVersion:
-  $ref: "./firmware_version.yml"
-HardwareInventory:
-  $ref: "./hardware_inventory.yml"

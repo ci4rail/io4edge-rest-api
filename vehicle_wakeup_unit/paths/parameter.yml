@@ -40,13 +40,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../../core/schemas/error_info.yml"
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
     "403":
       description: Forbidden. Parameter is read-protected.
       content:
         application/json:
           schema:
-            $ref: "../../core/schemas/error_info.yml"
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
     "500":
       $ref: "../../core/responses/internal_server_error.yml"
 
@@ -79,4 +79,4 @@ put:
       content:
         application/json:
           schema:
-            $ref: "../../core/schemas/error_info.yml"
+            $ref: "../../sio06-apiv1.yml#/components/schemas/ErrorInfo"

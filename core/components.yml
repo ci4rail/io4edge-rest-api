@@ -1,0 +1,56 @@
+components:
+  schemas:
+    ErrorInfo:
+      type: object
+      properties:
+        code:
+          description: Error code identifying the module and error
+          type: string
+          example: "auth-0001"
+        message:
+          description: Error message
+          type: string
+          example: "invalid password"
+    FirmwareVersion:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "fw_sio04_01_default"
+        version:
+          type: string
+          example: "1.0.0-rc1"
+    HardwareInventory:
+      type: object
+      properties:
+        part_number:
+          description: Ci4Rail part number
+          type: string
+          example: "S103-SIO04"
+        serial_number:
+          description: A UUIDV4 serial number that unqiuely identifies the device
+          type: string
+          example: "24891aa4-d098-4e7e-9a40-d07de788a928"
+        major_version:
+          description: |-
+            Major version of the hardware, independent from the software version.
+
+            The hardware major number is increased when breaking changes are introduced in the hardware.
+          type: integer
+          example: 1
+    Configuration:
+      type: object
+      properties:
+        version:
+          type: string
+          example: "1.0"
+        parameters:
+          type: object
+          properties:
+            parameter1:
+              type: string
+              example: "value1"
+            parameter2:
+              type: string
+              example: "value2"
+    

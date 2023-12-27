@@ -12,7 +12,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../schemas/firmware_version.yml"
+            $ref: "../components.yml#/components/schemas/FirmwareVersion"
     "401":
       $ref: "../responses/unauthorized.yml"
     "500":
@@ -39,7 +39,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: "../schemas/error_info.yml"
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
     "401":
       $ref: "../responses/unauthorized.yml"
     "500":

@@ -40,7 +40,7 @@ post:
         application/json:
           schema:
             allOf:
-              - $ref: "../../core/schemas/error_info.yml"
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
               - type: object
                 properties:
                   code:

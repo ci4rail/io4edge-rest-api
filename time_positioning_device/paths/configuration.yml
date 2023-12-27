@@ -1,6 +1,6 @@
 get:
   tags:
-    - app
+    - tps
   summary: Get configuration of time positioning device
   description: |-
     Get configuration version and parameters of the device and list the parameters that are not supported 
@@ -25,6 +25,7 @@ get:
     - pos-dev2crp - (e.g. "0.0,0.0,0.0") IMU to CRP offset
     - pos-dev2ant - (e.g. "0.0,0.0,0.0") IMU to ANT offset
     - pos-dev2vrp - (e.g. "0.0,0.0,0.0") IMU to VRP offset
+   
   security:
     - basicAuth: []
   responses:
@@ -34,7 +35,7 @@ get:
         application/json:
           schema:
             allOf:
-              - $ref: "../../core/schemas/configuration.yml"
+              - $ref: "../../core/components.yml#/components/schemas/Configuration"
               - type: object
                 properties:
                   unsupported_parameters:
@@ -57,7 +58,7 @@ get:
       $ref: "../../core/responses/internal_server_error.yml"
 put:
   tags:
-    - app
+    - tps
   summary: Load configuration of time positioning device
   description: |-
     Upload configuration to device.
@@ -78,7 +79,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "../schemas/configuration.yml"
+          $ref: "../components.yml#/components/schemas/Configuration"
   responses:
     "200":
       description: OK
@@ -87,7 +88,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: "../../core/schemas/error_info.yml"
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "500":
