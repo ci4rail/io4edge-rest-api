@@ -69,9 +69,25 @@ put:
       schema:
         type: string
         example: "device-id"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            value:
+              description: Parameter value
+              type: string
+              example: "my-device"
   responses:
     "200":
       description: OK
+    "400":
+      description: Parameter value is invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "404":
