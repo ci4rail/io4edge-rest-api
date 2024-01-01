@@ -14,8 +14,7 @@ Change DeviceID
     ...    /parameter/global/device-id
     ...    json=${body}
     ...    expected_status=200
-    ${response}=    POST On Session    ${GLOBAL_SESSION}    /command/restart    expected_status=200
-    Create Global Session
+    Restart Device
     ${response}=    GET On Session    ${GLOBAL_SESSION}    /parameter/global/device-id    expected_status=200
     Should Be Equal As Strings    ${response.json()}[value]    ${newid}
 

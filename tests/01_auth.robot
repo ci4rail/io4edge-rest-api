@@ -33,7 +33,7 @@ Access without Credentials
     POST    /command/restart
     POST    /command/repl
     GET    /parameter/global/static-ip
-    #PUT    /parameter/global/static-ip
+    PUT    /parameter/global/static-ip
     GET    /configuration/tps
     PUT    /configuration/tps
 
