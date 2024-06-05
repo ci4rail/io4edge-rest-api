@@ -3,7 +3,7 @@ Library     RequestsLibrary
 
 
 *** Variables ***
-${BASE_URL}             https://192.168.24.129/api/v1
+${BASE_URL}             https://192.168.23.48/api/v1
 ${USERNAME}             io4edge
 ${DEFAULT_PASSWORD}     core
 ${MOD_PASSWORD}         newpassword    # + 0 or 1

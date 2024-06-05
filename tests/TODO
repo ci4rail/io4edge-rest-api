@@ -1,0 +1,11 @@
+Missing Testcases:
+* Load certificate
+* Load private key
+* Get firmware version
+* Load firmware
+* Load HW information
+* Restart Command
+* Configuration
+    * With invalid configuration values
+    * Parameters that are supported in later FW versions
+    * Manually modified parameters
