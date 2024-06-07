@@ -9,7 +9,7 @@ ${DEFAULT_PASSWORD}     core
 ${MOD_PASSWORD}         newpassword    # + 0 or 1
 ${CURRENT_PASSWORD}     \
 ${CERT_VERIFY}          ${FALSE}    # Set to ${TRUE} to verify the server's certificate or to a path to a CA bundle to use a custom certificate
-# ${CERT_VERIFY}    ${CURDIR}/cert.pem
+#${CERT_VERIFY}    ${CURDIR}/certs/public_key.pem  Can't get this to work with self-signed certs
 ${FW_NAME}              fw-io4edge-rest
 ${GLOBAL_SESSION}       global_session
 ${APP}                  tps
