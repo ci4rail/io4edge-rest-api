@@ -17,7 +17,7 @@ info:
     Clients should reuse the TLS session where possible to avoid this delay.
 
 servers:
-  - url: https://my-io4edge-device/api/v1
+  - url: https://192.168.23.72/api/v1
     description: Example SIO06
 tags:
   - name: core
@@ -57,5 +57,7 @@ components:
       $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/FirmwareVersion"
     HardwareInventory:
       $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/HardwareInventory"
-    Configuration:
-      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/Configuration"
+    ConfigurationGet:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ConfigurationGet"
+    ConfigurationPut:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ConfigurationPut"

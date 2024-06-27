@@ -22,7 +22,49 @@ put:
     - core
   summary: Load firmware
   description: |-
-    Upload firmware to the device.
+    Upload firmware to the device. The payload must be the raw binary firmware 
+    file for the application partition. 
+
+    Users of this endpoint must ensure the compatibility of the firmware with the device. 
+    Typically, firmware updates will be shipped as .fwpkg files, which is a tar file
+    containing a manifest and the binary firmware files. The manifest contains the
+    a list of compatible hardware, which should be compared with the hardware inventory info provided 
+    by the device.
+    
+    The binary file must be uploaded in chunks. The first chunk must be uploaded with offset 0. 
+    The offset must be increased by the size of the chunk for each subsequent chunk.
+    The last chunk must be uploaded with the last parameter set to "true".
+
+    It is possible to upload the firmware in a single chunk, but you don't get an indication
+    of the progress of the upload. It is recommended to upload the firmware in chunks of ~20kB.
+
+    If the firmware upload is interrupted, the device will continue normally.
+
+    If the firmware data is corrupted, the device will continue with the current firmware.
+    
+    If the firmware upload is successful, the device will reboot. 
+    
+    If it doesn't start up, the device will rollback to the previous application firmware.
+
+
+  parameters:
+    - name: offset
+      in: query
+      description: |-
+        defines the byte offset at which the chunk will be loaded. Byte offset must be given in decimal.
+      required: true
+      schema:
+        type: string
+        example: "20000"
+    - name: last
+      in: query
+      description: |-
+        "true" indicates that this is the last chunk of the firmware. "false" indicates that more chunks will follow.
+      required: true
+      schema:
+        type: string
+        example: "true"
+
   security:
     - basicAuth: []
   requestBody:

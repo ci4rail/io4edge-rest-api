@@ -6,12 +6,18 @@ get:
     Get configuration version and parameters of the device and list the parameters that are not supported 
     by the firmware or missing in configuration.
 
-    Available parameters:
-    - rel-hold - (e.g. "1.0") time in seconds until relay is deactivated
-    - rel-comid - (e.g. "A2F66F23") ComID of TRDP relay sink, in hex notation
-    - input-comid - (e.g. "A2F66F24") ComID of TRDP "inputs" source, in hex notation
-    - input-pubper - (e.g. "3.2") publishing period of TRDP "inputs" in Hz
-   
+    Parameters not set by the user will have the default value and will appear in the missing_parameters list.
+
+    Parameters set with invalid values will retain their default value and will appear in the invalid_parameters list.
+
+    Parameters not supported by the firmware will be ignored and will appear in the unsupported_parameters list.
+
+    Available parameters, with their default values in brackets, are:
+    - rel-hold [2.0] - (e.g. "1.0") time in seconds until relay is deactivated
+    - rel-comid [TBD] - (e.g. "A2F66F23") ComID of TRDP relay sink, in hex notation
+    - input-comid [TBD]- (e.g. "A2F66F24") ComID of TRDP "inputs" source, in hex notation
+    - input-pubper [1.0] - (e.g. "3.2") publishing period of TRDP "inputs" in Hz
+
   security:
     - basicAuth: []
   responses:
@@ -20,24 +26,8 @@ get:
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: "../../core/components.yml#/components/schemas/Configuration"
-              - type: object
-                properties:
-                  unsupported_parameters:
-                    description: |-
-                      List of parameters in configuration that are not supported by the firmware, (e.g.
-                      because the firmware is too old).
-                    type: array
-                    items:
-                      type: string
-                    example: ["parameter3", "parameter4"]
-                  missing_parameters:
-                    description: List of parameters that are expected by firmware but missing in configuration.
-                    type: array
-                    items:
-                      type: string
-                    example: ["parameter5"]
+            $ref: "../../core/components.yml#/components/schemas/ConfigurationGet"
+
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "500":
@@ -49,15 +39,9 @@ put:
   description: |-
     Upload configuration to device.
     Client should call configuration GET endpoint to check if the configuration was applied successfully.
-    See GET /configuration for available parameters.
+    See GET /configuration for available parameters and the behaviour for missing, unsupported and invalid parameters.
 
-    If a parameter is not set in the configuration, the default value will be used.
-
-    If a parameter contains an invalid value, the configuration will not be applied and the device will return an error.
-
-    If a parameter is not supported by the firmware, the configuration will be appplied, but the parameter will be ignored.
-
-    The device should be restarted after configuration is applied.
+    The new parameters can be read back immediately after the PUT request, but they will not be applied until the device is restarted.
 
   security:
     - basicAuth: []
@@ -65,7 +49,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "../components.yml#/components/schemas/Configuration"
+          $ref: "../components.yml#/components/schemas/ConfigurationPut"
   responses:
     "200":
       description: OK

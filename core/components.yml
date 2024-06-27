@@ -38,13 +38,17 @@ components:
             The hardware major number is increased when breaking changes are introduced in the hardware.
           type: integer
           example: 1
-    Configuration:
+    ConfigurationGet:
       type: object
       properties:
         version:
+          description: |-
+            Version of the loaded configuration.
           type: string
           example: "1.0"
         parameters:
+          description: |-
+            List of all parameters with their values known by this version of the firmware.
           type: object
           properties:
             parameter1:
@@ -53,4 +57,40 @@ components:
             parameter2:
               type: string
               example: "value2"
-    
+        unsupported_parameters:
+          description: |-
+            List of parameters in configuration that are not supported by the firmware, (e.g.
+            because the firmware is too old).
+          type: array
+          items:
+            type: string
+          example: ["parameter3", "parameter4"]
+        missing_parameters:
+          description: List of parameters that are expected by firmware but missing in configuration.
+          type: array
+          items:
+            type: string
+          example: ["parameter5"]
+        invalid_parameters:
+          description: List of parameters with invalid values.
+          type: array
+          items:
+            type: string
+          example: ["parameter6"]
+    ConfigurationPut:
+      type: object
+      properties:
+        version:
+          type: string
+          example: "1.0"
+        parameters:
+          description: |-
+            List of parameters to set
+          type: object
+          properties:
+            parameter1:
+              type: string
+              example: "value1"
+            parameter2:
+              type: string
+              example: "value2"

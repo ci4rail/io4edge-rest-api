@@ -2,8 +2,10 @@ components:
   schemas:
     ErrorInfo:
       $ref: "../core/components.yml#/components/schemas/ErrorInfo"
-    Configuration:
-      $ref: "../core/components.yml#/components/schemas/Configuration"
+    ConfigurationGet:
+      $ref: "../core/components.yml#/components/schemas/ConfigurationGet"
+    ConfigurationPut:
+      $ref: "../core/components.yml#/components/schemas/ConfigurationPut"
     FirmwareVersion:
       $ref: "../core/components.yml#/components/schemas/FirmwareVersion"
     HardwareInventory:
