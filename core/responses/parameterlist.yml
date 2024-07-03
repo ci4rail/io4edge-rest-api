@@ -1,0 +1,28 @@
+description: OK
+content:
+  application/json:
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            description: Parameter name
+            type: string
+            example: "param1"
+          description:
+            description: Parameter description. (none) if not set 
+            type: string
+            example: "This is a parameter"
+          default:
+            description: Default value, (none) if not set
+            type: string
+            example: "default"
+          read_protected:
+            description: Read protection
+            type: boolean
+            example: false
+          persistence:
+            description: Storage layer
+            type: string
+            example: "ESP_NVS"

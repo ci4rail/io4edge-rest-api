@@ -1,15 +1,13 @@
 get:
   tags:
-    - core
-  summary: Get value of a global parameter
+    - vwu
+  summary: Get value of a vwu parameter
   description: |-
-    Get value of a global parameter.
+    Get value of a vwu parameter.
     Parameter name must be a valid parameter name known to the firmware.
 
     Available parameters:
-    - device-id - (e.g. "my-device") to identify the device in the network (e.g. via mdns)
-    - static-ip - (e.g. "192.168.11.11:255.255.255.0:192.168.11.1") static IP address, network mask and gateway. If not set, DHCP is used.
-
+      - TODO
   security:
     - basicAuth: []
   parameters:
@@ -52,10 +50,10 @@ get:
 
 put:
   tags:
-    - core
-  summary: Set value of global parameter
+    - vwu
+  summary: Set value of vwu parameter
   description: |-
-    Set value of global parameter. 
+    Set value of vwu parameter. 
     Parameter name must be a valid parameter name known to the firmware.
     See GET /parameter/{parameter} for available parameters.
   security:
@@ -69,9 +67,25 @@ put:
       schema:
         type: string
         example: "device-id"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            value:
+              description: Parameter value
+              type: string
+              example: "my-device"
   responses:
     "200":
       description: OK
+    "400":
+      description: Parameter value is invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "404":

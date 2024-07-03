@@ -1,14 +1,17 @@
 get:
   tags:
     - vwu
-  summary: Get configuration of vehicle wakeup unit
+  summary: Get parameter-set of vehicle wakeup unit
   description: |-
-    Get configuration version and parameters of the device and list the parameters that are not supported 
-    by the firmware or missing in configuration.
+    Get parameter-set version and parameters of the device and list the parameters that are not supported 
+    by the firmware or missing in parameter-set.
 
     Parameters not set by the user will have the default value and will appear in the missing_parameters list.
 
     Parameters set with invalid values will retain their default value and will appear in the invalid_parameters list.
+    Invalid parameters are usually rejected when uploading a new parameter-set. It is however possible, that the
+    parameter has been uploaded in a previous version of the firmware, which did not know this parameter. The current firmware
+    version might reject the parameter.
 
     Parameters not supported by the firmware will be ignored and will appear in the unsupported_parameters list.
 
@@ -26,7 +29,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../../core/components.yml#/components/schemas/ConfigurationGet"
+            $ref: "../../core/components.yml#/components/schemas/ParameterSetGet"
 
     "401":
       $ref: "../../core/responses/unauthorized.yml"
@@ -35,11 +38,17 @@ get:
 put:
   tags:
     - vwu
-  summary: Load configuration of vehicle wakeup unit
+  summary: Load parameter-set of vehicle wakeup unit
   description: |-
-    Upload configuration to device.
-    Client should call configuration GET endpoint to check if the configuration was applied successfully.
-    See GET /configuration for available parameters and the behaviour for missing, unsupported and invalid parameters.
+    Upload parameter-set to device.
+
+    If any parameter has an invalid value, the whole parameter-set will be rejected and the response will contain the invalid parameter.
+
+    It is possible to upload parameters that are not known by the firmware. These parameters will be ignored. 
+    This allows to load a parameter-set that is compatible with multiple firmware versions.
+
+    Client should call parameter-set GET endpoint to check if the parameter-set was applied successfully.
+    See GET /parameterset for available parameters and the behaviour for missing, unsupported and invalid parameters.
 
     The new parameters can be read back immediately after the PUT request, but they will not be applied until the device is restarted.
 
@@ -49,12 +58,12 @@ put:
     content:
       application/json:
         schema:
-          $ref: "../components.yml#/components/schemas/ConfigurationPut"
+          $ref: "../components.yml#/components/schemas/ParameterSetPut"
   responses:
     "200":
       description: OK
     "400":
-      description: Invalid configuration
+      description: Invalid parameter-set
       content:
         application/json:
           schema:

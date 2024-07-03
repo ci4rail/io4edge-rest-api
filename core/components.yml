@@ -38,17 +38,18 @@ components:
             The hardware major number is increased when breaking changes are introduced in the hardware.
           type: integer
           example: 1
-    ConfigurationGet:
+    ParameterSetGet:
       type: object
       properties:
         version:
           description: |-
-            Version of the loaded configuration.
+            Version of the loaded parameter-set.
           type: string
           example: "1.0"
         parameters:
           description: |-
-            List of all parameters with their values known by this version of the firmware.
+            List of all parameters with their current values known by this version of the firmware.
+            Parameters that have not been set or set with invalid values are included and will have default values.
           type: object
           properties:
             parameter1:
@@ -57,16 +58,22 @@ components:
             parameter2:
               type: string
               example: "value2"
+            parameter5:
+              type: string
+              example: "defaultvalue5"
+            parameter6:
+              type: string
+              example: "defaultvalue6"
         unsupported_parameters:
           description: |-
-            List of parameters in configuration that are not supported by the firmware, (e.g.
+            List of parameters in parameter-set that are not supported by the firmware, (e.g.
             because the firmware is too old).
           type: array
           items:
             type: string
           example: ["parameter3", "parameter4"]
         missing_parameters:
-          description: List of parameters that are expected by firmware but missing in configuration.
+          description: List of parameters that are expected by firmware but missing in parameter-set.
           type: array
           items:
             type: string
@@ -77,7 +84,7 @@ components:
           items:
             type: string
           example: ["parameter6"]
-    ConfigurationPut:
+    ParameterSetPut:
       type: object
       properties:
         version:
