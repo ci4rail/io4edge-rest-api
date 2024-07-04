@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: SIO06 Management API
-  version: "0.0.1"
+  version: "1.0.0"
   description: |-
     This is the API documentation to manage SIO06 devices via HTTPS.
     This API does not serve metrics. For performance reasons, metrics are served at http://my-io4edge-device:9100/metrics.
