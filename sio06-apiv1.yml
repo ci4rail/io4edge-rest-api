@@ -36,14 +36,22 @@ paths:
     $ref: "./core/paths/firmware.yml"
   /hardware:
     $ref: "./vehicle_wakeup_unit/paths/hardware.yml"
-  /command/restart:
-    $ref: "./core/paths/command_restart.yml"
-  /command/repl:
-    $ref: "./vehicle_wakeup_unit/paths/command_repl.yml"
-  /parameter/global/{parameter}:
+  /restart:
+    $ref: "./core/paths/restart.yml"
+  /factoryreset:
+    $ref: "./core/paths/factoryreset.yml"
+  /repl:
+    $ref: "./vehicle_wakeup_unit/paths/repl.yml"
+  /parameter:
+    $ref: "./core/paths/parameterlist.yml"
+  /parameter/{parameter}:
     $ref: "./vehicle_wakeup_unit/paths/parameter.yml"
-  /configuration/vwu:
-    $ref: "./vehicle_wakeup_unit/paths/configuration.yml"
+  /vwu/parameterset:
+    $ref: "./vehicle_wakeup_unit/paths/parameterset.yml"
+  /vwu/parameter:
+    $ref: "./vehicle_wakeup_unit/paths/parameterlist.yml"
+  /vwu/parameter/{parameter}:
+    $ref: "./vehicle_wakeup_unit/paths/vwu_parameter.yml"
 
 components:
   securitySchemes:
@@ -57,7 +65,7 @@ components:
       $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/FirmwareVersion"
     HardwareInventory:
       $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/HardwareInventory"
-    ConfigurationGet:
-      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ConfigurationGet"
-    ConfigurationPut:
-      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ConfigurationPut"
+    ParameterSetGet:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ParameterSetGet"
+    ParameterSetPut:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ParameterSetPut"

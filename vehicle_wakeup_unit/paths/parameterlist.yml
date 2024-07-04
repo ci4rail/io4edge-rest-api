@@ -1,0 +1,15 @@
+get:
+  tags:
+    - vwu
+  summary: List available vwu specific parameters
+  description: |-
+    List all available vwu specific parameters known by the firmware
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      $ref: "../../core/responses/parameterlist.yml"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"
