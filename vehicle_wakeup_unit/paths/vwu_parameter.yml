@@ -25,12 +25,7 @@ get:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              value:
-                description: Parameter value
-                type: string
-                example: "my-device"
+
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "404":
@@ -80,6 +75,10 @@ put:
   responses:
     "200":
       description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ParameterPutResponse"
     "400":
       description: Parameter value is invalid.
       content:

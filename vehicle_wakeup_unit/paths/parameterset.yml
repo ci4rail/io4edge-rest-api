@@ -58,10 +58,14 @@ put:
     content:
       application/json:
         schema:
-          $ref: "../components.yml#/components/schemas/ParameterSetPut"
+          $ref: "../../core/components.yml#/components/schemas/ParameterSetPut"
   responses:
     "200":
       description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ParameterSetPutResponse"
     "400":
       description: Invalid parameter-set
       content:

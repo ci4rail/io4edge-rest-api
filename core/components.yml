@@ -101,3 +101,42 @@ components:
             parameter2:
               type: string
               example: "value2"
+    ParameterSetPutResponse:
+      type: object
+      properties:
+        missing_parameters:
+          description: List of parameters that are expected by firmware but missing in parameter-set.
+          type: array
+          items:
+            type: string
+          example: ["parameter5"]
+        unsupported_parameters:
+          description: |-
+            List of parameters in parameter-set that are not supported by the firmware, (e.g.
+            because the firmware is too old).
+          type: array
+          items:
+            type: string
+          example: ["parameter3", "parameter4"]
+        reboot_required:
+          description: Some parameters require device reboot to take effect
+          type: bool
+          example: true
+    ParameterPutResponse:
+      type: object
+      properties:
+        reboot_required:
+          description: Some parameters require device reboot to take effect
+          type: bool
+          example: true
+    ParameterGetResponse:
+      type: object
+      properties:
+        value:
+          description: Parameter value
+          type: string
+          example: "my-device"
+        reboot_required:
+          description: Some parameters (not necessarily this one) require device reboot to take effect
+          type: boolean
+          example: false
