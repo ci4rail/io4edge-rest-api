@@ -6,8 +6,7 @@ get:
     Get value of a vwu parameter.
     Parameter name must be a valid parameter name known to the firmware.
 
-    Available parameters:
-      - TODO
+    See GET /vwu/parameterset for available parameters.
   security:
     - basicAuth: []
   parameters:
@@ -50,7 +49,7 @@ put:
   description: |-
     Set value of vwu parameter. 
     Parameter name must be a valid parameter name known to the firmware.
-    See GET /parameter/{parameter} for available parameters.
+    See GET /vwu/parameterset for available parameters.
   security:
     - basicAuth: []
   parameters:
