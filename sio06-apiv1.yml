@@ -7,9 +7,9 @@ info:
     This API does not serve metrics. For performance reasons, metrics are served at http://my-io4edge-device:9100/metrics.
 
     The API is secured with basic auth with a single user name and password.
-    - user: "io4edge", default password: "core"
+    - user: "io4edge", default password: "core_io4edge"
 
-    The password can be changed with the PATCH /users/io4edge/basic_auth endpoint.
+    The password can be changed with the PUT /users/io4edge/basic_auth endpoint.
 
     The API is available at https://my-io4edge-device/api/v1
 
