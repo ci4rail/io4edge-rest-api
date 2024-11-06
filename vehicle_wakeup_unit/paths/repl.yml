@@ -8,13 +8,12 @@ post:
     Note that "200" is returned even if the command failed.
     If the command failed, the last line is `command returned failure 1`.
 
-    - device_id - Set/Get Device ID - Device ID is used to identify the device in the network (e.g. via mdns)
-    - static-ip - Set/Get static IP address, network mask and gateway. If not set, DHCP is used.
+    - device_id [device-id] - Set/Get Device ID - Device ID is used to identify the device in the network (e.g. via mdns)
+    - static-ip [IP:netmask:gateway] - Set/Get static IP address, network mask and gateway. If not set, DHCP is used.
     - ps - show running threads
     - heap - Get free heap
     - reboot - Restart device
-    - log-level - Set/Get log level (0=NONE 1=ERROR 2=WARN 3=INFO 4=DEBUG 5=VERBOSE)
-    - hw-inv - Set/Get hardware inventory 
+    - log-level [level] - Set/Get log level (0=NONE 1=ERROR 2=WARN 3=INFO 4=DEBUG 5=VERBOSE)
     - Further commands may be added later...
 
   security:
@@ -40,7 +39,7 @@ post:
         application/json:
           schema:
             allOf:
-              - $ref: "../../core/schemas/error_info.yml"
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
               - type: object
                 properties:
                   code:

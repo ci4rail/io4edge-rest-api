@@ -13,7 +13,7 @@ get:
         application/json:
           schema:
             allOf:
-              - $ref: "../schemas/hardware_inventory.yml"
+              - $ref: "../components.yml#/components/schemas/HardwareInventory"
     "401":
       $ref: "../responses/unauthorized.yml"
     "500":
@@ -30,7 +30,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "../schemas/hardware_inventory.yml"
+          $ref: "../components.yml#/components/schemas/HardwareInventory"
   responses:
     "200":
       description: OK
@@ -42,7 +42,7 @@ put:
         application/json:
           schema:
             allOf:
-              - $ref: "../schemas/error_info.yml"
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
               - type: object
                 properties:
                   code:

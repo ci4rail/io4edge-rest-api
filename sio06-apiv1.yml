@@ -1,0 +1,71 @@
+openapi: "3.0.2"
+info:
+  title: SIO06 Management API
+  version: "1.0.0"
+  description: |-
+    This is the API documentation to manage SIO06 devices via HTTPS.
+    This API does not serve metrics. For performance reasons, metrics are served at http://my-io4edge-device:9100/metrics.
+
+    The API is secured with basic auth with a single user name and password.
+    - user: "io4edge", default password: "core_io4edge"
+
+    The password can be changed with the PUT /users/io4edge/basic_auth endpoint.
+
+    The API is available at https://my-io4edge-device/api/v1
+
+    Performance note: Due to hardware limitations, the initial TLS handshake can take up to 2 seconds.
+    Clients should reuse the TLS session where possible to avoid this delay.
+
+servers:
+  - url: https://192.168.23.72/api/v1
+    description: Example SIO06
+tags:
+  - name: core
+    description: Common io4edge API
+  - name: vwu
+    description: vehicle wakeup unit specific API
+
+paths:
+  /users/{user}/basic_auth:
+    $ref: "./core/paths/auth_basic.yml"
+  /certificate:
+    $ref: "./core/paths/certificate.yml"
+  /key:
+    $ref: "./core/paths/key.yml"
+  /firmware:
+    $ref: "./core/paths/firmware.yml"
+  /hardware:
+    $ref: "./vehicle_wakeup_unit/paths/hardware.yml"
+  /restart:
+    $ref: "./core/paths/restart.yml"
+  /factoryreset:
+    $ref: "./core/paths/factoryreset.yml"
+  /repl:
+    $ref: "./vehicle_wakeup_unit/paths/repl.yml"
+  /parameter:
+    $ref: "./core/paths/parameterlist.yml"
+  /parameter/{parameter}:
+    $ref: "./vehicle_wakeup_unit/paths/parameter.yml"
+  /vwu/parameterset:
+    $ref: "./vehicle_wakeup_unit/paths/parameterset.yml"
+  /vwu/parameter:
+    $ref: "./vehicle_wakeup_unit/paths/parameterlist.yml"
+  /vwu/parameter/{parameter}:
+    $ref: "./vehicle_wakeup_unit/paths/vwu_parameter.yml"
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ErrorInfo:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ErrorInfo"
+    FirmwareVersion:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/FirmwareVersion"
+    HardwareInventory:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/HardwareInventory"
+    ParameterSetGet:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ParameterSetGet"
+    ParameterSetPut:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ParameterSetPut"

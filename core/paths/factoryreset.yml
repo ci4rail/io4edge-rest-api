@@ -1,0 +1,19 @@
+post:
+  tags:
+    - core
+  summary: Reset Device to Factory Defaults
+  description: |-
+    Apply factory reset to the device.
+    This will reset the device to factory settings, i.e. will clear all user 
+    configuration, but not the hardware inventory.
+    
+    The device will restart after the reset.
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      description: OK
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"
