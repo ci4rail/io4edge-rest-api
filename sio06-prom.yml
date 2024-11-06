@@ -20,7 +20,7 @@ paths:
 
         The metrics are served in the prometheus text format.
 
-        Detailed list of metrics is TBD
+        List of metrics is shown in the example response.
       responses:
         "200":
           description: OK
@@ -29,9 +29,25 @@ paths:
               schema:
                 type: string
                 example: |-
-                  # HELP free_heap_bytes
+                  # HELP free_heap_bytes Free heap (bytes)
                   # TYPE free_heap_bytes gauge
-                  free_heap_bytes{} 122884
+                  free_heap_bytes{} 262368
+                  # HELP number_pakcets_received Number of the relay control messages received at the trdp sink
+                  # TYPE number_pakcets_received counter
+                  number_pakcets_received{} 0
+                  # HELP number_packets_published Number of successful published trdp packets from the source
+                  # TYPE number_packets_published counter
+                  number_packets_published{} 17
+                  # HELP ana Analog input values(-1 to 1)
+                  # TYPE ana gauge
+                  ana{channel="ch1"} -0.004149
+                  ana{channel="ch2"} -0.004166
+                  # HELP bin Digital input values (Bitmask)
+                  # TYPE bin gauge
+                  bin{} 0
+                  # HELP relay Desired relay states (Bitmask)
+                  # TYPE relay gauge
+                  relay{} 0
         "500":
           description: Internal Server Error
 
