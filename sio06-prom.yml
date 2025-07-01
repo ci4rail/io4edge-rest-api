@@ -29,29 +29,50 @@ paths:
               schema:
                 type: string
                 example: |-
+                  # HELP reset_count Number of resets occurred
+                  # TYPE reset_count counter
+                  reset_count{reason="unknown"} 0
+                  reset_count{reason="poweron"} 5
+                  reset_count{reason="external"} 0
+                  reset_count{reason="software"} 3
+                  reset_count{reason="panic"} 0
+                  reset_count{reason="interruptwd"} 0
+                  reset_count{reason="taskwd"} 0
+                  reset_count{reason="wd"} 0
+                  reset_count{reason="deepsleep"} 0
+                  reset_count{reason="brownout"} 0
+                  reset_count{reason="sdio"} 0
+                  reset_count{reason="usb"} 119
+                  reset_count{reason="jtag"} 0
+                  reset_count{reason="efuse"} 0
+                  reset_count{reason="powerglitch"} 0
+                  reset_count{reason="cpulockup"} 0
                   # HELP free_heap_bytes Free heap (bytes)
                   # TYPE free_heap_bytes gauge
-                  free_heap_bytes{} 251568
+                  free_heap_bytes{} 246368
                   # HELP up_seconds uptime (seconds)
                   # TYPE up_seconds counter
-                  up_seconds{} 307.812578
+                  up_seconds{} 432.457876
                   # HELP number_packets_received Number of trdp packets received at the sink
                   # TYPE number_packets_received counter
-                  number_packets_received{type="good"} 170
-                  number_packets_received{type="bad_crc"} 36
+                  number_packets_received{type="good"} 141
+                  number_packets_received{type="lost"} 23
+                  number_packets_received{type="seq_resync"} 4
+                  number_packets_received{type="bad_crc"} 0
                   number_packets_received{type="bad_comid"} 0
                   number_packets_received{type="bad_version"} 0
-                  number_packets_received{type="bad_type"} 42
+                  number_packets_received{type="bad_type"} 0
                   number_packets_received{type="short"} 0
                   number_packets_received{type="bad_len"} 0
+                  number_packets_received{type="seq_old"} 0
                   # HELP number_packets_published Number of published trdp packets from the source
                   # TYPE number_packets_published counter
-                  number_packets_published{type="good"} 1512
-                  number_packets_published{type="failed"} 18
+                  number_packets_published{type="good"} 2137
+                  number_packets_published{type="failed"} 11
                   # HELP ana Analog input values(-1 to 1)
                   # TYPE ana gauge
-                  ana{channel="ch1"} -0.004278
-                  ana{channel="ch2"} 1.248239
+                  ana{channel="ch1"} -0.004237
+                  ana{channel="ch2"} -0.004250
                   # HELP bin Digital input values (Bitmask)
                   # TYPE bin gauge
                   bin{} 0
