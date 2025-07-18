@@ -1,0 +1,120 @@
+openapi: "3.0.2"
+info:
+  title: SIO06 Prometheus Metrics API
+  version: "0.0.1"
+  description: |-
+    This is the API documentation to get prometheus metrics from SIO06 devices using HTTP.
+
+    The API is available at http://my-io4edge-device:9100/metrics.
+
+servers:
+  - url: http://my-io4edge-device:9100/metrics
+    description: Example SIO06
+
+paths:
+  /metrics:
+    get:
+      summary: Get prometheus metrics
+      description: |-
+        Get prometheus metrics from the device.
+
+        The metrics are served in the prometheus text format.
+
+        List of metrics is shown in the example response (Firmware sio06_01_default version 1.1.1)
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |-
+                  # HELP free_heap_bytes Free heap (bytes)
+                  # TYPE free_heap_bytes gauge
+                  free_heap_bytes{} 164932
+                  # HELP reset_count Number of resets occurred
+                  # TYPE reset_count counter
+                  reset_count{reason="unknown"} 0
+                  reset_count{reason="poweron"} 0
+                  reset_count{reason="external"} 0
+                  reset_count{reason="software"} 0
+                  reset_count{reason="panic"} 0
+                  reset_count{reason="interruptwd"} 0
+                  reset_count{reason="taskwd"} 0
+                  reset_count{reason="wd"} 0
+                  reset_count{reason="deepsleep"} 0
+                  reset_count{reason="brownout"} 0
+                  reset_count{reason="sdio"} 0
+                  reset_count{reason="usb"} 1
+                  reset_count{reason="jtag"} 0
+                  reset_count{reason="efuse"} 0
+                  reset_count{reason="powerglitch"} 0
+                  reset_count{reason="cpulockup"} 0
+                  # HELP ntp_time_source_enum NTP Time Source (0=none 1=RTC 2=GNSS)
+                  # TYPE ntp_time_source_enum gauge
+                  ntp_time_source_enum{} 2
+                  # HELP gnss_sensor_fusion_status_enum GNSS Sensor fusion status (0-3)
+                  # TYPE gnss_sensor_fusion_status_enum gauge
+                  gnss_sensor_fusion_status_enum{} 0
+                  # HELP gnss_fix_type_enum GNSS Fix Type (0=no fix, 1=DR+&MSS, 2=3D, 3=GNSS + DR, 4=RTK Fixed, 5=RTK Float, 6=DR only, 7=Time only)
+                  # TYPE gnss_fix_type_enum gauge
+                  gnss_fix_type_enum{} 3
+                  # HELP gnss_eph GNSS Horizontal Precision (meters)
+                  # TYPE gnss_eph gauge
+                  gnss_eph{} 1.955000
+                  # HELP gnss_hdop GNSS Horizontal Dilution of Precision (HDOP)
+                  # TYPE gnss_hdop gauge
+                  gnss_hdop{} 1.080000
+                  # HELP gnss_speed GNSS Speed (m/s)
+                  # TYPE gnss_speed gauge
+                  gnss_speed{} 0.010000
+                  # HELP gnss_antenna_status_enum Antenna status (0=init, 1=unknown, 2=ok, 3=short, 4=open)
+                  # TYPE gnss_antenna_status_enum gauge
+                  gnss_antenna_status_enum{} 2
+                  # HELP gnss_antenna_power_enum Antenna power (0=off, 1=on, 2=unknown)
+                  # TYPE gnss_antenna_power_enum gauge
+                  gnss_antenna_power_enum{} 1
+                  # HELP gnss_boot_type_enum GNSS Boot Type (0-10)
+                  # TYPE gnss_boot_type_enum gauge
+                  gnss_boot_type_enum{} 3
+                  # HELP gnss_runtime GNSS Runtime in seconds
+                  # TYPE gnss_runtime gauge
+                  gnss_runtime{} 90
+                  # HELP gnss_ref_station_id GNSS reference station
+                  # TYPE gnss_ref_station_id gauge
+                  gnss_ref_station_id{} 0
+                  # HELP gnss_num_sv Number of satellites used in fix
+                  # TYPE gnss_num_sv gauge
+                  gnss_num_sv{} 16
+                  # HELP gnss_pga gain of programmable amplifier
+                  # TYPE gnss_pga gauge
+                  gnss_pga{block="rf1"} 39
+                  gnss_pga{block="rf2"} 51
+                  # HELP gnss_num_sats number of satellites in view
+                  # TYPE gnss_num_sats gauge
+                  gnss_num_sats{system="gps"} 16
+                  gnss_num_sats{system="glonass"} 6
+                  gnss_num_sats{system="beidou"} 7
+                  gnss_num_sats{system="galileo"} 2
+                  gnss_num_sats{system="qzss"} 1
+                  gnss_num_sats{system="sbas"} 3
+                  gnss_num_sats{system="navic"} 0
+                  # HELP gnss_uart_errors GNSS UART error counters
+                  # TYPE gnss_uart_errors counter
+                  gnss_uart_errors{type="hw_fifo"} 0
+                  gnss_uart_errors{type="buf_full"} 0
+                  gnss_uart_errors{type="char"} 0
+                  # HELP gnss_imu_temperature GNSS IMU temperature (Celsius)
+                  # TYPE gnss_imu_temperature gauge
+                  gnss_imu_temperature{} 26.330000
+                  # HELP health health status (0=unknown, 1=good, 2=bad)
+                  # TYPE health gauge
+                  health{type="main"} 1
+                  health{type="rtc"} 1
+                  health{type="rtc_battery"} 2
+                  health{type="ubx_firmware"} 1
+                  health{type="ubx_config"} 1
+                  health{type="gnss_comm"} 1
+        "500":
+          description: Internal Server Error
+

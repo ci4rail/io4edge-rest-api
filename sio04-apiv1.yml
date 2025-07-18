@@ -1,0 +1,71 @@
+openapi: "3.0.2"
+info:
+  title: SIO04 Management API
+  version: "1.0.0"
+  description: |-
+    This is the API documentation to manage SIO04 devices via HTTPS.
+    This API does not serve metrics. For performance reasons, metrics are served at http://my-io4edge-device:9100/metrics.
+
+    The API is secured with basic auth with a single user name and password.
+    - user: "io4edge", default password: "core_io4edge"
+
+    The password can be changed with the PUT /users/io4edge/basic_auth endpoint.
+
+    The API is available at https://my-io4edge-device/api/v1
+
+    Performance note: Due to hardware limitations, the initial TLS handshake can take up to 2 seconds.
+    Clients should reuse the TLS session where possible to avoid this delay.
+
+servers:
+  - url: https://192.168.23.72/api/v1
+    description: Example SIO04
+tags:
+  - name: core
+    description: Common io4edge API
+  - name: tps
+    description: time/position server specific API
+
+paths:
+  /users/{user}/basic_auth:
+    $ref: "./core/paths/auth_basic.yml"
+  /certificate:
+    $ref: "./core/paths/certificate.yml"
+  /key:
+    $ref: "./core/paths/key.yml"
+  /firmware:
+    $ref: "./core/paths/firmware.yml"
+  /hardware:
+    $ref: "./time_position_server/paths/hardware.yml"
+  /restart:
+    $ref: "./core/paths/restart.yml"
+  /factoryreset:
+    $ref: "./core/paths/factoryreset.yml"
+  /repl:
+    $ref: "./time_position_server/paths/repl.yml"
+  /parameter:
+    $ref: "./core/paths/parameterlist.yml"
+  /parameter/{parameter}:
+    $ref: "./time_position_server/paths/parameter.yml"
+  /tps/parameterset:
+    $ref: "./time_position_server/paths/parameterset.yml"
+  /tps/parameter:
+    $ref: "./time_position_server/paths/parameterlist.yml"
+  /tps/parameter/{parameter}:
+    $ref: "./time_position_server/paths/tps_parameter.yml"
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ErrorInfo:
+      $ref: "./time_position_server/components.yml#/components/schemas/ErrorInfo"
+    FirmwareVersion:
+      $ref: "./time_position_server/components.yml#/components/schemas/FirmwareVersion"
+    HardwareInventory:
+      $ref: "./time_position_server/components.yml#/components/schemas/HardwareInventory"
+    ParameterSetGet:
+      $ref: "./time_position_server/components.yml#/components/schemas/ParameterSetGet"
+    ParameterSetPut:
+      $ref: "./time_position_server/components.yml#/components/schemas/ParameterSetPut"
