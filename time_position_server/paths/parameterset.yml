@@ -1,0 +1,84 @@
+get:
+  tags:
+    - tps
+  summary: Get parameter-set of time position server
+  description: |-
+    Get parameter-set version and parameters of the device and list the parameters that are not supported 
+    by the firmware or missing in parameter-set.
+
+    Parameters not set by the user will have the default value and will appear in the missing_parameters list.
+
+    Parameters set with invalid values will retain their default value and will appear in the invalid_parameters list.
+    Invalid parameters are usually rejected when uploading a new parameter-set. It is however possible, that the
+    parameter has been uploaded in a previous version of the firmware, which did not know this parameter. The current firmware
+    version might reject the parameter.
+
+    Parameters not supported by the firmware will be ignored and will appear in the unsupported_parameters list.
+
+    Available parameters, with their default values in brackets, are:
+    - ntp_strat_gnss [1] - NTP stratum for GNSS time source
+    - ntp_strat_rtc [2] - NTP stratum for RTC time source
+    - ntp_strat_none [16] - NTP stratum for no time source
+    - ntp_poll_min [64] - Minimum NTP poll interval in seconds
+    - ntp_poll_max [1024] - Maximum NTP poll interval in seconds
+    - gps2udp_target[] - (e.g. "192.168.0.100:12444") Target for GPS2UDP messages (hostname:port). Can be multicast address.
+    - ntrip_caster [] (e.g. "31.12.57.11:2101:VRS_3_2G_SN") NTRIP caster address: Server to acquire GNSS corrections (hostname:port:mountpoint)
+    - ntrip_credentials [] (e.g. "myuser:mypassword") NTRIP credentials for accessing the caster (username:password)
+    - ant_volt [3.3] - Antenna voltage. Either 3.3 or 5. Attention: 5V may damage the antenna, check specifications of your antenna.
+    Additional parameters may be added in future firmware versions.
+
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ParameterSetGet"
+
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"
+put:
+  tags:
+    - tps
+  summary: Load parameter-set of time position server
+  description: |-
+    Upload parameter-set to device.
+
+    If any parameter has an invalid value, the whole parameter-set will be rejected and the response will contain the invalid parameter.
+
+    It is possible to upload parameters that are not known by the firmware. These parameters will be ignored. 
+    This allows to load a parameter-set that is compatible with multiple firmware versions.
+
+    Client should call parameter-set GET endpoint to check if the parameter-set was applied successfully.
+    See GET /parameterset for available parameters and the behaviour for missing, unsupported and invalid parameters.
+
+    The new parameters can be read back immediately after the PUT request, but they will not be applied until the device is restarted.
+
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../core/components.yml#/components/schemas/ParameterSetPut"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ParameterSetPutResponse"
+    "400":
+      description: Invalid parameter-set
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"

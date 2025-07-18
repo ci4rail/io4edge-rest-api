@@ -1,0 +1,18 @@
+components:
+  schemas:
+    ErrorInfo:
+      $ref: "../core/components.yml#/components/schemas/ErrorInfo"
+    ParameterSetGet:
+      $ref: "../core/components.yml#/components/schemas/ParameterSetGet"
+    ParameterSetPut:
+      $ref: "../core/components.yml#/components/schemas/ParameterSetPut"
+    FirmwareVersion:
+      $ref: "../core/components.yml#/components/schemas/FirmwareVersion"
+    HardwareInventory:
+      allOf:
+        - $ref: "../core/components.yml#/components/schemas/HardwareInventory"
+        - type: object
+          properties:
+            siemens_part_number:
+              type: string
+              example: "A2V1234"
