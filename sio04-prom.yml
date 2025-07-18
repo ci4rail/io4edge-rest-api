@@ -1,6 +1,6 @@
 openapi: "3.0.2"
 info:
-  title: SIO06 Prometheus Metrics API
+  title: SIO04 Prometheus Metrics API
   version: "0.0.1"
   description: |-
     This is the API documentation to get prometheus metrics from SIO06 devices using HTTP.
@@ -9,7 +9,7 @@ info:
 
 servers:
   - url: http://my-io4edge-device:9100/metrics
-    description: Example SIO06
+    description: Example SIO04
 
 paths:
   /metrics:
@@ -20,7 +20,7 @@ paths:
 
         The metrics are served in the prometheus text format.
 
-        List of metrics is shown in the example response (Firmware sio06_01_default version 1.1.1)
+        List of metrics is shown in the example response (Firmware sio04_01_default version 1.1.1)
       responses:
         "200":
           description: OK
