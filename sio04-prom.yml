@@ -20,7 +20,7 @@ paths:
 
         The metrics are served in the prometheus text format.
 
-        List of metrics is shown in the example response (Firmware sio04_01_default version 1.1.1)
+        List of metrics is shown in the example response (Firmware sio04_01_default version 0.1.x)
       responses:
         "200":
           description: OK
