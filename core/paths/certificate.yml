@@ -8,7 +8,7 @@ put:
     Note that the certificate must match the private key already stored on the device.
     You may change the private key with the `/key` endpoint.
 
-    The new certificate will be used after the next restart, which can be triggered with the `/command/restart` endpoint.
+    The new certificate will be used after the next restart, which can be triggered with the `/restart` endpoint.
   security:
     - basicAuth: []
   requestBody:
