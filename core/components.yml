@@ -120,14 +120,14 @@ components:
           example: ["parameter3", "parameter4"]
         reboot_required:
           description: Some parameters require device reboot to take effect
-          type: bool
+          type: boolean
           example: true
     ParameterPutResponse:
       type: object
       properties:
         reboot_required:
           description: Some parameters require device reboot to take effect
-          type: bool
+          type: boolean
           example: true
     ParameterGetResponse:
       type: object

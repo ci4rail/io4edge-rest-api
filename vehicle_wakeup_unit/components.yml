@@ -9,10 +9,23 @@ components:
     FirmwareVersion:
       $ref: "../core/components.yml#/components/schemas/FirmwareVersion"
     HardwareInventory:
-      allOf:
-        - $ref: "../core/components.yml#/components/schemas/HardwareInventory"
-        - type: object
-          properties:
-            siemens_part_number:
-              type: string
-              example: "A2V1234"
+      type: object
+      properties:
+        part_number:
+          description: Ci4Rail part number, including major hardware version and configuration suffix
+          type: string
+          example: "S103-SIO06-02-00001"
+        serial_number:
+          description: serial number that uniquely identifies the device within the part number series
+          type: string
+          example: "0000001"
+        major_version:
+          description: |-
+            Major version of the hardware, independent from the software version.
+            Redundant information, the major version is also encoded in the part number.
+            The hardware major number is increased when breaking changes are introduced in the hardware.
+          type: integer
+          example: 1
+        siemens_part_number:
+          type: string
+          example: "A2V00003294619"

@@ -16,8 +16,9 @@ get:
     Parameters not supported by the firmware will be ignored and will appear in the unsupported_parameters list.
 
     Available parameters, with their default values in brackets, are:
+
     - rel-comid [56575530] - (e.g. "A2F66F23") ComID of TRDP relay sink, in hex notation
-    - input-pubhost [] - (e.g. "192.168.66.77:20") destination host of TRDP "inputs". If empty, no inputs are published. Default is empty.
+    - input-pubhost [] - (e.g. "192.168.66.77") destination host of TRDP "inputs". If empty, no inputs are published. Default is empty.
     - input-comid [56575531]- (e.g. "A2F66F24") ComID of TRDP "inputs" source, in hex notation
     - input-pubper [1.0] - (e.g. "3.2") publishing frequency of TRDP "inputs" in Hz
 
