@@ -1,0 +1,41 @@
+get:
+  tags:
+    - uart
+  summary: Open websocket bridge to UART
+  description: |-
+    Upgrade the HTTP connection to a websocket and transparently bridge data between
+    the websocket and the selected UART interface.
+
+    - Every websocket **binary** message is written to the UART as-is. Use binary
+      frames to avoid implicit character encoding conversions. Use a maximum frame
+      size of 1024 bytes. Larger frames cannot be handled by the firmware and 
+      will cause the connection to be closed.
+    - Bytes received from the UART are forwarded to the websocket client as binary
+      messages. Message boundaries are not preserved; data may be chunked depending
+      on driver buffering.
+    - The bridge closes when the websocket is closed by either side
+    - Baud rate and other UART settings are managed via the parameter
+      endpoints (see `GET /uart/{com-port}/parameterset`).
+
+    Typical use: open `wss://my-io4edge-device/api/v1/uart/{com-port}/ws`, then send
+    and receive binary frames to exchange raw UART data.
+  security:
+    - basicAuth: []
+  parameters:
+    - name: com-port
+      in: path
+      description: UART interface to bridge (`com1` or `com2`).
+      required: true
+      schema:
+        type: string
+        example: "com1"
+  responses:
+    "101":
+      description: Switching Protocols. Websocket bridge established; subsequent
+        frames are forwarded between websocket and UART.
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "404":
+      description: UART interface not found.
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"

@@ -1,0 +1,88 @@
+get:
+  tags:
+    - uart
+  summary: Get parameter-set of a UART Interface
+  description: |-
+    Get parameter-set version and parameters of the device and list the parameters that are not supported 
+    by the firmware or missing in parameter-set.
+
+    Parameters not set by the user will have the default value and will appear in the missing_parameters list.
+
+    Parameters set with invalid values will retain their default value and will appear in the invalid_parameters list.
+    Invalid parameters are usually rejected when uploading a new parameter-set. It is however possible, that the
+    parameter has been uploaded in a previous version of the firmware, which did not know this parameter. The current firmware
+    version might reject the parameter.
+
+    Parameters not supported by the firmware will be ignored and will appear in the unsupported_parameters list.
+
+    Available parameters, with their default values in brackets, are:
+
+    - baudrate [9600] - (e.g. "115200") UART baudrate in bits per second
+    - databits [8] - (e.g. "7") Number of data bits (7 or 8)
+    - stopbits [1] - (e.g. "2") Number of stop bits (1 or 2)
+    - parity [none] - (e.g. "even") Parity type: none, even, odd
+    - halfduplex [off] - (e.g. "on") Enable half-duplex mode (on or off)
+
+  security:
+    - basicAuth: []
+  parameters:
+    - name: com-port
+      in: path
+      description: UART interface to bridge (`com1` or `com2`).
+      required: true
+      schema:
+        type: string
+        example: "com1"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ParameterSetGet"
+
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"
+put:
+  tags:
+    - uart
+  summary: Load parameter-set of a UART Interface
+  description: |-
+    Upload parameter-set to device.
+
+    If any parameter has an invalid value, the whole parameter-set will be rejected and the response will contain the invalid parameter.
+
+    It is possible to upload parameters that are not known by the firmware. These parameters will be ignored. 
+    This allows to load a parameter-set that is compatible with multiple firmware versions.
+
+    Client should call parameter-set GET endpoint to check if the parameter-set was applied successfully.
+    See GET /parameterset for available parameters and the behaviour for missing, unsupported and invalid parameters.
+
+    The new parameters can be read back immediately after the PUT request, but they will not be applied until the device is restarted.
+
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../core/components.yml#/components/schemas/ParameterSetPut"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ParameterSetPutResponse"
+    "400":
+      description: Invalid parameter-set
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"

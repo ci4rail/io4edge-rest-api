@@ -1,0 +1,23 @@
+get:
+  tags:
+    - uart
+  summary: List available uart specific parameters
+  description: |-
+    List all available uart specific parameters known by the firmware
+  security:
+    - basicAuth: []
+  parameters:
+    - name: com-port
+      in: path
+      description: UART interface to bridge (`com1` or `com2`).
+      required: true
+      schema:
+        type: string
+        example: "com1"
+  responses:
+    "200":
+      $ref: "../../core/responses/parameterlist.yml"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"

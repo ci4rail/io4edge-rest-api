@@ -1,0 +1,98 @@
+get:
+  tags:
+    - uart
+  summary: Get value of a uart parameter
+  description: |-
+    Get value of a uart parameter.
+    Parameter name must be a valid parameter name known to the firmware.
+
+    See GET /uart/{com-port}/parameterset for available parameters.
+  security:
+    - basicAuth: []
+  parameters:
+    - name: com-port
+      in: path
+      description: UART interface to bridge (`com1` or `com2`).
+      required: true
+      schema:
+        type: string
+        example: "com1"
+    - name: parameter
+      in: path
+      description: |-
+        Parameter name.
+      required: true
+      schema:
+        type: string
+        example: "device-id"
+  responses:
+    "200":
+      description: OK
+
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "404":
+      description: Parameter not found
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
+    "403":
+      description: Forbidden. Parameter is read-protected.
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"
+
+put:
+  tags:
+    - uart
+  summary: Set value of uart parameter
+  description: |-
+    Set value of uart parameter. 
+    Parameter name must be a valid parameter name known to the firmware.
+    See GET /uart/{com-port}/parameterset for available parameters.
+  security:
+    - basicAuth: []
+  parameters:
+    - name: parameter
+      in: path
+      description: |-
+        Parameter name.
+      required: true
+      schema:
+        type: string
+        example: "device-id"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            value:
+              description: Parameter value
+              type: string
+              example: "my-device"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ParameterPutResponse"
+    "400":
+      description: Parameter value is invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "404":
+      description: Parameter not found
+      content:
+        application/json:
+          schema:
+            $ref: "../../core/components.yml#/components/schemas/ErrorInfo"

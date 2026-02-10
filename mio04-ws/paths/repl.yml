@@ -1,0 +1,48 @@
+post:
+  tags:
+    - core
+  summary: Execute a registered REPL command
+  description: |-
+    Execute a registered REPL command.
+    The response contains the output of the command.
+    Note that "200" is returned even if the command failed.
+    If the command failed, the last line is `command returned failure 1`.
+
+    - ps - show running tasks
+    - heap - Get free heap
+    - reboot - Restart device
+    - log-level [level] - Set/Get log level (0=NONE 1=ERROR 2=WARN 3=INFO 4=DEBUG 5=VERBOSE)
+    - param [name] [value] - Get/Set parameter
+
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      text/plain:
+        schema:
+          type: string
+          example: "heap"
+  responses:
+    "200":
+      description: OK
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: |-
+              Free heap: 125466 bytes
+    "400":
+      description: Invalid command
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  code:
+                    example: "cmd-0001"
+                  message:
+                    example: "command not found"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
