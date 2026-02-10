@@ -1,0 +1,75 @@
+openapi: "3.0.2"
+info:
+  title: MIO04 REST API Firmware Management API
+  version: "0.0.1"
+  description: |-
+    This is the API documentation to manage MIO04 devices with the "REST API" firmware via HTTPS.
+
+    Currenlty, only the COM interfaces of the MIO04 are supported. 
+    CAN interface may be supported in a future firmware version.
+
+    The API is secured with basic auth with a single user name and password.
+    - user: "io4edge", default password: "core_io4edge"
+
+    The password can be changed with the PUT /users/io4edge/basic_auth endpoint.
+
+    The API is available at https://my-io4edge-device/api/v1
+
+    Performance note: Due to hardware limitations, the initial TLS handshake can take up to 2 seconds.
+    Clients should reuse the TLS session where possible to avoid this delay.
+
+servers:
+  - url: https://192.168.23.72/api/v1
+    description: Example MIO04
+tags:
+  - name: core
+    description: Common io4edge API
+  - name: uart
+    description: specific API for UART interfaces. The {com-port} path parameter defines the UART interface ("com1" or "com2").
+
+paths:
+  /users/{user}/basic_auth:
+    $ref: "./core/paths/auth_basic.yml"
+  /certificate:
+    $ref: "./core/paths/certificate.yml"
+  /key:
+    $ref: "./core/paths/key.yml"
+  /firmware:
+    $ref: "./core/paths/firmware.yml"
+  /hardware:
+    $ref: "./core/paths/hardware.yml"
+  /restart:
+    $ref: "./core/paths/restart.yml"
+  /factoryreset:
+    $ref: "./core/paths/factoryreset.yml"
+  /repl:
+    $ref: "./mio04-ws/paths/repl.yml"
+  /parameter:
+    $ref: "./core/paths/parameterlist.yml"
+  /parameter/{parameter}:
+    $ref: "./mio04-ws/paths/parameter.yml"
+  /uart/{com-port}/parameterset:
+    $ref: "./uart-ws/paths/parameterset.yml"
+  /uart/{com-port}/parameter:
+    $ref: "./uart-ws/paths/parameterlist.yml"
+  /uart/{com-port}/parameter/{parameter}:
+    $ref: "./uart-ws/paths/parameter.yml"
+  /uart/{com-port}/ws:
+    $ref: "./uart-ws/paths/ws.yml"
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ErrorInfo:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ErrorInfo"
+    FirmwareVersion:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/FirmwareVersion"
+    HardwareInventory:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/HardwareInventory"
+    ParameterSetGet:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ParameterSetGet"
+    ParameterSetPut:
+      $ref: "./vehicle_wakeup_unit/components.yml#/components/schemas/ParameterSetPut"
