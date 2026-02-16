@@ -48,13 +48,13 @@ paths:
     $ref: "./core/paths/parameterlist.yml"
   /parameter/{parameter}:
     $ref: "./mio04-ws/paths/parameter.yml"
-  /uart/{com-port}/parameterset:
+  /{com-port}/parameterset:
     $ref: "./uart-ws/paths/parameterset.yml"
-  /uart/{com-port}/parameter:
+  /{com-port}/parameter:
     $ref: "./uart-ws/paths/parameterlist.yml"
-  /uart/{com-port}/parameter/{parameter}:
+  /{com-port}/parameter/{parameter}:
     $ref: "./uart-ws/paths/parameter.yml"
-  /uart/{com-port}/ws:
+  /{com-port}/ws:
     $ref: "./uart-ws/paths/ws.yml"
 
 components:

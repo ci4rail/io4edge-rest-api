@@ -9,7 +9,7 @@ get:
     - Every websocket **binary** message is written to the UART as-is. Use binary
       frames to avoid implicit character encoding conversions. Use a maximum frame
       size of 1024 bytes. Larger frames cannot be handled by the firmware and 
-      will cause the connection to be closed.
+      will cause the connection to be closed. Also note, that there is no flow control, so sending data faster than the UART can handle will cause data loss.
     - Bytes received from the UART are forwarded to the websocket client as binary
       messages. Message boundaries are not preserved; data may be chunked depending
       on driver buffering.
