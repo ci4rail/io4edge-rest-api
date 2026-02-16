@@ -6,7 +6,7 @@ get:
     Get value of a uart parameter.
     Parameter name must be a valid parameter name known to the firmware.
 
-    See GET /uart/{com-port}/parameterset for available parameters.
+    See GET /{com-port}/parameterset for available parameters.
   security:
     - basicAuth: []
   parameters:
@@ -53,7 +53,7 @@ put:
   description: |-
     Set value of uart parameter. 
     Parameter name must be a valid parameter name known to the firmware.
-    See GET /uart/{com-port}/parameterset for available parameters.
+    See GET /{com-port}/parameterset for available parameters.
   security:
     - basicAuth: []
   parameters:

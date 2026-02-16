@@ -15,9 +15,9 @@ get:
       on driver buffering.
     - The bridge closes when the websocket is closed by either side
     - Baud rate and other UART settings are managed via the parameter
-      endpoints (see `GET /uart/{com-port}/parameterset`).
+      endpoints (see `GET /{com-port}/parameterset`).
 
-    Typical use: open `wss://my-io4edge-device/api/v1/uart/{com-port}/ws`, then send
+    Typical use: open `wss://my-io4edge-device/api/v1/{com-port}/ws`, then send
     and receive binary frames to exchange raw UART data.
   security:
     - basicAuth: []
