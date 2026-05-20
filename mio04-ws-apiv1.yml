@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: MIO04 REST API Firmware Management API
-  version: "0.0.1"
+  version: "1.0.0"
   description: |-
     This is the API documentation to manage MIO04 devices with the "REST API" firmware via HTTPS.
 
