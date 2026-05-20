@@ -13,7 +13,7 @@ info:
 
     The password can be changed with the PUT /users/io4edge/basic_auth endpoint.
 
-    The API is available at https://my-io4edge-device/api/v1
+    The API is available at https://<device-ip>/api/v1
 
     Performance note: Due to hardware limitations, the initial TLS handshake can take up to 2 seconds.
     Clients should reuse the TLS session where possible to avoid this delay.
