@@ -1,0 +1,34 @@
+put:
+  tags:
+    - core
+  summary: Load factory default certificate
+  description: |-
+    Upload the factory default HTTPS server certificate to device. 
+
+    The factory certificate/key is used as long no user certificate/key is uploaded to the device. 
+    It is restored when a factory reset is applied to the device.
+
+    Note that the factory default certificate must match the factory default private key stored on the device.
+    You may change the factory default private key with the `/factory/key` endpoint.
+
+    The new certificate will be used after the next restart, which can be triggered with the `/restart` endpoint.
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/x-pem-file:
+        schema:
+          type: string
+          format: binary
+          example: |
+            -----BEGIN CERTIFICATE-----
+            MIIDXTCCAkWgAwIBAgIJAK7Z3Z3Z3Z3ZMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+            ...
+            -----END CERTIFICATE-----
+  responses:
+    "200":
+      description: OK
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"

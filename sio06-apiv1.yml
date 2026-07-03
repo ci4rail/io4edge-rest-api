@@ -52,6 +52,12 @@ paths:
     $ref: "./vehicle_wakeup_unit/paths/parameterlist.yml"
   /vwu/parameter/{parameter}:
     $ref: "./vehicle_wakeup_unit/paths/vwu_parameter.yml"
+  /factory/users/{user}/basic_auth:
+    $ref: "./core/paths/factory_auth_basic.yml"
+  /factory/certificate:
+    $ref: "./core/paths/factory_certificate.yml"
+  /factory/key:
+    $ref: "./core/paths/factory_key.yml"
 
 components:
   securitySchemes:

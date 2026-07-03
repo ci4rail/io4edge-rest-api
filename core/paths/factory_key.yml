@@ -1,0 +1,33 @@
+put:
+  tags:
+    - core
+  summary: Load factory default private key
+  description: |-
+    Upload the factory default private key to device. 
+
+    The factory certificate/key is used as long no user certificate/key is uploaded to the device. 
+    It is restored when a factory reset is applied to the device.
+
+    Note that the factory default private key must match the factory default certificate stored on the device.
+    You may change the certificate with the `/factory/certificate` endpoint.
+
+    The new key will be used after the next restart, which can be triggered with the `/restart` endpoint.
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/x-pem-file:
+        schema:
+          type: string
+          format: binary
+          example: |
+            -----BEGIN RSA PRIVATE KEY-----
+            ...
+            -----END PRIVATE KEY-----
+  responses:
+    "200":
+      description: OK
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"
