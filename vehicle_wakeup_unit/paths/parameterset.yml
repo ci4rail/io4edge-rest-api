@@ -6,7 +6,7 @@ get:
     Get parameter-set version and parameters of the device and list the parameters that are not supported 
     by the firmware or missing in parameter-set.
 
-    Parameters not set by the user will have the default value and will appear in the missing_parameters list.
+    Parameters not set (or have "" value) by the user will have the default value and will appear in the missing_parameters list.
 
     Parameters set with invalid values will retain their default value and will appear in the invalid_parameters list.
     Invalid parameters are usually rejected when uploading a new parameter-set. It is however possible, that the
@@ -22,7 +22,7 @@ get:
     - input-comid [56575531]- (e.g. "A2F66F24") ComID of TRDP "inputs" source, in hex notation
     - input-pubper [1.0] - (e.g. "3.2") publishing frequency of TRDP "inputs" in Hz
     - hbeat_wd_s [] - (e.g. "100") If set to non-zero value, heartbeat observation will be activated. Unit: seconds. Valid Range: 5 to 86400 seconds. Default is empty (deactivated).
-    - hbeat_action [] - (e.g. "0:off:off;1000:on:off;5000:on:on") list of <time>:<relay1state>:<relay2state> entries, list entries separated by semi-colon “;”. <time> specifies the time this specific entry will last. <Time unit: ms. Valid Time Ranges are 0..1000000 ms (1000 seconds). Minimum time delta between entries: 100 ms. Maximum list entries: 8.
+    - hbeat_action [] - (e.g. "0:off:off;1000:on:off;5000:on:on") list of <time>:<relay1state>:<relay2state> entries, list entries separated by semi-colon “;”. <time> specifies the delay in ms before the relay states are applied. Maximum list entries: 8.
 
   security:
     - basicAuth: []

@@ -1,0 +1,45 @@
+put:
+  parameters:
+    - name: user
+      in: path
+      description: |-
+        User Name to update.
+        Currently only "io4edge" user is supported.
+      required: true
+      schema:
+        type: string
+  tags:
+    - core
+  summary: Update factory default basic auth password
+  description: |-
+    Update factory default basic auth password for user.
+
+    The factory default basic auth password is used as long no user password is set on the device.
+    It is restored when a factory reset is applied to the device.
+    
+    Authentication with the current credentials is required.
+    Password must be between 8 an 64 characters long.
+  security:
+    - basicAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            password:
+              type: string
+              example: "AZ78z67c!99"
+  responses:
+    "200":
+      description: OK
+    "400":
+      description: Invalid password, password missing, password length invalid
+      content:
+        application/json:
+          schema:
+            $ref: "../components.yml#/components/schemas/ErrorInfo"
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "500":
+      $ref: "../responses/internal_server_error.yml"
