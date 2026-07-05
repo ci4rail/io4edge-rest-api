@@ -1,11 +1,11 @@
 openapi: "3.0.2"
 info:
   title: MIO04 REST API Firmware Management API
-  version: "0.0.1"
+  version: "1.0.0"
   description: |-
     This is the API documentation to manage MIO04 devices with the "REST API" firmware via HTTPS.
 
-    Currenlty, only the COM interfaces of the MIO04 are supported. 
+    Currently, only the COM interfaces of the MIO04 are supported. 
     CAN interface may be supported in a future firmware version.
 
     The API is secured with basic auth with a single user name and password.
@@ -13,7 +13,7 @@ info:
 
     The password can be changed with the PUT /users/io4edge/basic_auth endpoint.
 
-    The API is available at https://my-io4edge-device/api/v1
+    The API is available at https://<device-ip>/api/v1
 
     Performance note: Due to hardware limitations, the initial TLS handshake can take up to 2 seconds.
     Clients should reuse the TLS session where possible to avoid this delay.
