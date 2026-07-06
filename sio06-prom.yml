@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: SIO06 Prometheus Metrics API
-  version: "0.0.1"
+  version: "1.0.0"
   description: |-
     This is the API documentation to get prometheus metrics from SIO06 devices using HTTP.
 
@@ -20,7 +20,7 @@ paths:
 
         The metrics are served in the prometheus text format.
 
-        List of metrics is shown in the example response (Firmware sio06_01_default version 1.1.1)
+        List of metrics is shown in the example response (Firmware sio06_01_02_default version 2.3.0)
       responses:
         "200":
           description: OK
@@ -83,6 +83,12 @@ paths:
                   # TYPE adc_errors counter
                   adc_errors{type="spi"} 0
                   adc_errors{type="tout"} 0
+                  # HELP wd_state Watchdog state (1=DEACTIVATED, 2=STOPPED, 3=RUNNING, 4=EXEC_ACTION, 5=ACTION_DONE)
+                  # TYPE wd_state gauge
+                  wd_state{} 1
+                  # HELP wd_time_since_last_trigger_us Time since last watchdog trigger (us) (0 when wd not running)
+                  # TYPE wd_time_since_last_trigger_us gauge
+                  wd_time_since_last_trigger_us{} 0
         "500":
           description: Internal Server Error
 
