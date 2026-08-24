@@ -81,7 +81,14 @@ put:
       content:
         application/json:
           schema:
-            $ref: "../components.yml#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  code:
+                    example: "fw-0010"
+                  message:
+                    example: "offset mismatch"
     "401":
       $ref: "../responses/unauthorized.yml"
     "500":
