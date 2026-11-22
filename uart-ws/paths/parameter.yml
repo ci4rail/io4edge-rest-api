@@ -57,6 +57,13 @@ put:
   security:
     - basicAuth: []
   parameters:
+    - name: com-port
+      in: path
+      description: UART interface to bridge (`com1` or `com2`).
+      required: true
+      schema:
+        type: string
+        example: "com1"
     - name: parameter
       in: path
       description: |-

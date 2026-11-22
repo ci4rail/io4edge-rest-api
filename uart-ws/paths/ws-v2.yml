@@ -1,0 +1,94 @@
+get:
+  tags:
+    - uart
+  summary: Open websocket bridge to UART with flow control (v2)
+  description: |-
+    Upgrade the HTTP connection to a websocket and bridge data between the websocket
+    and the selected UART interface, using a small framing protocol with flow control.
+    Use it to stream data to the UART without gaps (e.g. a firmware image to a device
+    that aborts when the serial stream pauses) and without data loss.
+
+    The connection rules of `GET /{com-port}/ws` apply (one client per COM port on
+    `/ws` or `/ws-v2`, authentication, keepalive, send timeout, socket budget).
+
+    #### Messages
+
+    All messages are **binary** websocket frames, one message per frame (no fragmentation).
+    Multi-byte fields are little-endian.
+
+    | Message | Layout | Direction |
+    |---|---|---|
+    | TX | `0x01` `seq:u16` `data[0..2048]` | host → device |
+    | TX_DONE | `0x02` `seq:u16` | device → host |
+    | RX | `0x03` `data[1..2048]` | device → host |
+    | ERROR | `0x04` `seq:u16` `code:u8` | device → host |
+
+    - **TX**: data to write to the UART. `seq` is chosen by the host and only echoed by the
+      device. An empty TX (no data) is answered with TX_DONE.
+    - **TX_DONE**: the data of the TX with this `seq` is in the UART transmit buffer, the host
+      may send the next TX. It does **not** mean that the data has been sent on the wire.
+    - **RX**: data received from the UART. Message boundaries are not preserved; data may be
+      chunked depending on driver buffering. UART data received while no client is connected
+      is discarded.
+    - **ERROR**: the TX with this `seq` was not (completely) processed.
+
+    ERROR codes:
+
+    | Code | Name | Meaning |
+    |---|---|---|
+    | 1 | BUSY | TX received before the TX_DONE of the previous TX. The TX is discarded. |
+    | 2 | INVALID | Too short, unknown message type, TEXT frame, or fragmented frame. `seq` is 0. |
+    | 3 | TOO_LARGE | Reserved, currently not sent (see frame size below). |
+    | 4 | UART_ERROR | Writing to the UART failed. |
+
+    #### Rules
+
+    - Flow control is stop-and-wait: at most one TX may be outstanding per COM port. Send the
+      next TX after the TX_DONE of the previous one.
+    - The connection stays open after an ERROR.
+    - A frame larger than 2051 bytes (header + 2048 data bytes) closes the connection.
+    - If the client disconnects while a TX is being written to the UART, the rest of that TX
+      is discarded. Bytes already in the UART transmit buffer are still sent.
+    - The UART transmit buffer holds 8192 bytes. To stream without gaps, send the next TX as soon
+      as the TX_DONE arrives, and avoid other HTTPS activity on the device (REST calls, new
+      connections, failed logins) while streaming. The metric `tx_idle_starts_total` counts TX
+      chunks that started while the UART transmitter was idle; a gap-free stream increases it by 1.
+
+    Typical use: open `wss://my-io4edge-device/api/v1/{com-port}/ws-v2`, send
+    `0x01 0x00 0x00 <up to 2048 data bytes>`, wait for `0x02 0x00 0x00`, send the next TX with
+    `seq` 1, and so on. Received UART data arrives as `0x03 <data>`.
+  security:
+    - basicAuth: []
+  parameters:
+    - name: com-port
+      in: path
+      description: UART interface to bridge (`com1` or `com2`).
+      required: true
+      schema:
+        type: string
+        example: "com1"
+  responses:
+    "101":
+      description: Switching Protocols. Websocket bridge established; subsequent
+        frames are exchanged using the ws-v2 messages.
+    "400":
+      description: Bad Request. A plain GET without websocket upgrade headers.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  code:
+                    example: "ws-0002"
+                  message:
+                    example: "websocket upgrade required"
+    "401":
+      $ref: "../../core/responses/unauthorized.yml"
+    "404":
+      description: UART interface not found. The COM ports are also not available while the device is in recovery mode.
+    "409":
+      $ref: "../responses/ws_conflict.yml"
+    "500":
+      $ref: "../../core/responses/internal_server_error.yml"

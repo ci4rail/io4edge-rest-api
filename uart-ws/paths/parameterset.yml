@@ -17,7 +17,7 @@ get:
 
     Available parameters, with their default values in brackets, are:
 
-    - baudrate [9600] - (e.g. "115200") UART baudrate in bits per second
+    - baudrate [9600] - (e.g. "115200") UART baudrate in bits per second (300 to 500000)
     - databits [8] - (e.g. "7") Number of data bits (7 or 8)
     - stopbits [1] - (e.g. "2") Number of stop bits (1 or 2)
     - parity [none] - (e.g. "even") Parity type: none, even, odd
@@ -64,6 +64,14 @@ put:
 
   security:
     - basicAuth: []
+  parameters:
+    - name: com-port
+      in: path
+      description: UART interface to bridge (`com1` or `com2`).
+      required: true
+      schema:
+        type: string
+        example: "com1"
   requestBody:
     content:
       application/json:
