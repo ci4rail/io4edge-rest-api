@@ -1,0 +1,139 @@
+openapi: "3.0.2"
+info:
+  title: MIO04 Prometheus Metrics API
+  version: "1.1.0"
+  description: |-
+    This is the API documentation to get prometheus metrics from MIO04 devices with the "REST API" firmware.
+
+    The API is available at https://<device-ip>:9100/metrics.
+
+    Since firmware 1.1.0, the metrics are served over HTTPS (TLS 1.3, same certificate as the REST API) with
+    basic auth, using the same credentials as the REST API (user "io4edge"). Firmware 1.0.0 served them
+    over plain HTTP without authentication. Prometheus scrape configs need `scheme: https` and `basic_auth`.
+    A failed login is answered with 401 after a delay of 3 s.
+
+    The metrics server accepts one connection at a time. TLS session resumption is supported; reuse the
+    connection or the TLS session to avoid the TLS handshake (up to 2 s) on every scrape.
+
+    The COM port metrics are not available while the device is in recovery mode.
+
+servers:
+  - url: https://192.168.23.72:9100
+    description: Example MIO04
+
+paths:
+  /metrics:
+    get:
+      summary: Get prometheus metrics
+      description: |-
+        Get prometheus metrics from the device.
+
+        The metrics are served in the prometheus text format.
+
+        COM port metrics (label `interface` = `com1` or `com2`):
+
+        - `bytes_received_from_host_total` - bytes received from the websocket client (`/ws` data, `/ws-v2` TX data)
+        - `bytes_sent_to_host_total` - bytes sent to the websocket client
+        - `uart_bytes_received_total` - bytes received from the UART
+        - `uart_bytes_sent_total` - bytes written to the UART
+        - `send_bytes_dropped_total` - bytes from the host that were not written to the UART (`/ws`: transmit buffer full;
+          `/ws-v2`: client disconnected while the TX was written)
+        - `rx_buffer_full_total` - UART receive buffer full events (data lost)
+        - `rx_fifo_overflow_total` - UART receive FIFO overflows (data lost)
+        - `rx_frame_error_total` - UART frame errors
+        - `rx_parity_error_total` - UART parity errors
+        - `tx_busy_rejects_total` - `/ws-v2` TX messages rejected with ERROR BUSY
+        - `tx_idle_starts_total` - `/ws-v2` TX chunks that started while the UART transmitter was idle (a gap-free stream counts 1)
+
+        Device metrics:
+
+        - `reset_count` - number of resets by reason. Besides the hardware reset reasons, application resets are
+          counted: `firmware-update`, `rest-command` (`/restart`), `factory-reset`, `console-command`, `core-command`,
+          `ethernet-fatal`.
+        - `free_heap_bytes` - free heap
+        - `up_seconds` - uptime
+
+        List of metrics is shown in the example response (firmware fw-mio04-01-restapi version 1.1.0).
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |-
+                  # HELP reset_count Number of resets occurred
+                  # TYPE reset_count counter
+                  reset_count{reason="unknown"} 0
+                  reset_count{reason="poweron"} 5
+                  reset_count{reason="external"} 0
+                  reset_count{reason="software"} 2
+                  reset_count{reason="panic"} 0
+                  reset_count{reason="interruptwd"} 0
+                  reset_count{reason="taskwd"} 0
+                  reset_count{reason="wd"} 0
+                  reset_count{reason="deepsleep"} 0
+                  reset_count{reason="brownout"} 0
+                  reset_count{reason="sdio"} 0
+                  reset_count{reason="usb"} 0
+                  reset_count{reason="jtag"} 0
+                  reset_count{reason="efuse"} 0
+                  reset_count{reason="powerglitch"} 0
+                  reset_count{reason="cpulockup"} 0
+                  reset_count{reason="firmware-update"} 1
+                  reset_count{reason="rest-command"} 2
+                  reset_count{reason="factory-reset"} 0
+                  reset_count{reason="console-command"} 0
+                  reset_count{reason="core-command"} 0
+                  reset_count{reason="ethernet-fatal"} 0
+                  # HELP free_heap_bytes Free heap (bytes)
+                  # TYPE free_heap_bytes gauge
+                  free_heap_bytes{} 61432
+                  # HELP up_seconds uptime (seconds)
+                  # TYPE up_seconds counter
+                  up_seconds{} 432.457876
+                  # HELP bytes_received_from_host_total Number of bytes received from host over websocket, total count
+                  # TYPE bytes_received_from_host_total counter
+                  bytes_received_from_host_total{interface="com1 com2"} 0
+                  # HELP bytes_sent_to_host_total Number of bytes sent to host over websocket, total count
+                  # TYPE bytes_sent_to_host_total counter
+                  bytes_sent_to_host_total{interface="com1 com2"} 0
+                  # HELP uart_bytes_received_total Number of bytes received from uart, total count
+                  # TYPE uart_bytes_received_total counter
+                  uart_bytes_received_total{interface="com1 com2"} 0
+                  # HELP uart_bytes_sent_total Number of bytes sent to uart, total count
+                  # TYPE uart_bytes_sent_total counter
+                  uart_bytes_sent_total{interface="com1 com2"} 0
+                  # HELP send_bytes_dropped_total Number of bytes that failed to send to uart due to full buffer, total count
+                  # TYPE send_bytes_dropped_total counter
+                  send_bytes_dropped_total{interface="com1 com2"} 0
+                  # HELP rx_buffer_full_total Number of times the UART RX buffer is full, total count
+                  # TYPE rx_buffer_full_total counter
+                  rx_buffer_full_total{interface="com1 com2"} 0
+                  # HELP rx_fifo_overflow_total Number of times the UART RX FIFO overflowed, total count
+                  # TYPE rx_fifo_overflow_total counter
+                  rx_fifo_overflow_total{interface="com1 com2"} 0
+                  # HELP rx_frame_error_total Number of times a UART frame error occurred, total count
+                  # TYPE rx_frame_error_total counter
+                  rx_frame_error_total{interface="com1 com2"} 0
+                  # HELP rx_parity_error_total Number of times a UART parity error occurred, total count
+                  # TYPE rx_parity_error_total counter
+                  rx_parity_error_total{interface="com1 com2"} 0
+                  # HELP tx_busy_rejects_total Number of ws-v2 TX messages rejected because the previous TX was pending
+                  # TYPE tx_busy_rejects_total counter
+                  tx_busy_rejects_total{interface="com1 com2"} 0
+                  # HELP tx_idle_starts_total Number of ws-v2 TX chunks that started while the UART transmitter was idle
+                  # TYPE tx_idle_starts_total counter
+                  tx_idle_starts_total{interface="com1 com2"} 0
+        "401":
+          description: Unauthorized. Missing or wrong basic auth credentials.
+        "500":
+          description: Internal Server Error
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

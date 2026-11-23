@@ -1,21 +1,41 @@
 get:
   tags:
     - uart
-  summary: Open websocket bridge to UART
+  summary: Open websocket bridge to UART (v1)
   description: |-
     Upgrade the HTTP connection to a websocket and transparently bridge data between
     the websocket and the selected UART interface.
 
     - Every websocket **binary** message is written to the UART as-is. Use binary
       frames to avoid implicit character encoding conversions. Use a maximum frame
-      size of 2048 bytes. Larger frames cannot be handled by the firmware and 
-      will cause the connection to be closed. Also note, that there is no flow control, so sending data faster than the UART can handle will cause data loss.
+      size of 2048 bytes. Larger frames cannot be handled by the firmware and
+      will cause the connection to be closed. Fragments of a fragmented message are
+      written to the UART one by one, without reassembly.
+    - There is no flow control. Data that doesn't fit into the UART transmit buffer
+      (8192 bytes) is dropped and counted in the `send_bytes_dropped_total` metric.
+      Use `GET /{com-port}/ws-v2` for flow-controlled, gap-free streaming to the UART.
     - Bytes received from the UART are forwarded to the websocket client as binary
-      messages. Message boundaries are not preserved; data may be chunked depending
-      on driver buffering.
-    - The bridge closes when the websocket is closed by either side
+      messages of up to 1024 bytes. Message boundaries are not preserved; data may be
+      chunked depending on driver buffering. UART data received while no client is
+      connected is discarded.
+    - The bridge closes when the websocket is closed by either side.
     - Baud rate and other UART settings are managed via the parameter
       endpoints (see `GET /{com-port}/parameterset`).
+
+    Connection rules (shared with `/{com-port}/ws-v2`):
+
+    - Only one client per COM port, either on `/ws` or on `/ws-v2`. Further clients are
+      rejected with `409` before the websocket handshake.
+    - Authentication is checked before the websocket handshake. A failed login is
+      answered with `401` after a delay of 3 s.
+    - Keepalive: the device sends a websocket PING to a client that has been silent for
+      5 s. A client that sends no frame (data or PONG) for 20 s is disconnected. Clients
+      must answer PINGs with a PONG (RFC 6455). The device answers PING frames from the
+      client with a PONG and CLOSE frames with a CLOSE.
+    - A client that doesn't take data from the device for 2 s is disconnected.
+    - The HTTPS server of the device has only 2 sockets. Opening a new connection (e.g. a REST
+      call) while two websockets are open closes the least recently used connection, which can
+      be one of the websockets.
 
     Typical use: open `wss://my-io4edge-device/api/v1/{com-port}/ws`, then send
     and receive binary frames to exchange raw UART data.
@@ -33,9 +53,24 @@ get:
     "101":
       description: Switching Protocols. Websocket bridge established; subsequent
         frames are forwarded between websocket and UART.
+    "400":
+      description: Bad Request. A plain GET without websocket upgrade headers.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  code:
+                    example: "ws-0002"
+                  message:
+                    example: "websocket upgrade required"
     "401":
       $ref: "../../core/responses/unauthorized.yml"
     "404":
-      description: UART interface not found.
+      description: UART interface not found. The COM ports are also not available while the device is in recovery mode.
+    "409":
+      $ref: "../responses/ws_conflict.yml"
     "500":
       $ref: "../../core/responses/internal_server_error.yml"

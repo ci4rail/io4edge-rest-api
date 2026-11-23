@@ -1,0 +1,12 @@
+description: Conflict. Another websocket client (on `/ws` or `/ws-v2`) is already connected to this COM port.
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: "../components.yml#/components/schemas/ErrorInfo"
+        - type: object
+          properties:
+            code:
+              example: "ws-0001"
+            message:
+              example: "another websocket client is already connected to this port"

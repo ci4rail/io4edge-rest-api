@@ -1,0 +1,42 @@
+get:
+  tags:
+    - core
+  summary: Download core dump
+  description: |-
+    Download the core dump of the last crash, for analysis by the manufacturer.
+
+    The core dump is stored in flash when the firmware crashes and stays available until it is
+    overwritten by the next crash.
+  security:
+    - basicAuth: []
+  responses:
+    "200":
+      description: OK. Core dump image (binary, file name `coredump.bin`).
+      headers:
+        X-Coredump-Size:
+          description: Size of the core dump image in bytes.
+          schema:
+            type: integer
+            example: 65536
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    "401":
+      $ref: "../responses/unauthorized.yml"
+    "404":
+      description: Not Found. No core dump partition, or no valid core dump available.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../components.yml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  code:
+                    example: "coredump-0002"
+                  message:
+                    example: "no valid coredump available"
+    "500":
+      $ref: "../responses/internal_server_error.yml"

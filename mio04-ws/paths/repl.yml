@@ -13,6 +13,13 @@ post:
     - reboot - Restart device
     - log-level [level] - Set/Get log level (0=NONE 1=ERROR 2=WARN 3=INFO 4=DEBUG 5=VERBOSE)
     - param [name] [value] - Get/Set parameter
+    - get_ip - Get IP address
+    - hw-inv - Set/Get hardware inventory
+    - factory - Reset to factory defaults
+    - purge_nvs <password> - Erase the complete NVS partition (incl. hardware inventory). Restart the device immediately afterwards.
+    - force-coredump - Trigger a panic to write a core dump and restart
+    - wifi-scan - Scan for Wifi access points
+    - wifi-dis - Disconnect from Wifi
 
   security:
     - basicAuth: []
@@ -30,7 +37,7 @@ post:
           schema:
             type: string
             example: |-
-              Free heap: 125466 bytes
+              Free heap: total=125466 internal=98120
     "400":
       description: Invalid command
       content:

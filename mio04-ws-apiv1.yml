@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: MIO04 REST API Firmware Management API
-  version: "1.0.0"
+  version: "1.1.0"
   description: |-
     This is the API documentation to manage MIO04 devices with the "REST API" firmware via HTTPS.
 
@@ -12,11 +12,22 @@ info:
     - user: "io4edge", default password: "core_io4edge"
 
     The password can be changed with the PUT /users/io4edge/basic_auth endpoint.
+    A failed login is answered after a delay of 3 s.
 
     The API is available at https://<device-ip>/api/v1
 
     Performance note: Due to hardware limitations, the initial TLS handshake can take up to 2 seconds.
     Clients should reuse the TLS session where possible to avoid this delay.
+    The HTTPS server has only 2 sockets. A new connection closes the least recently used connection
+    if both are in use, which can be an open websocket.
+
+    This API does not serve metrics. Prometheus metrics are served at https://<device-ip>:9100/metrics,
+    with the same basic auth credentials (see the MIO04 Prometheus API).
+
+    Recovery mode: after 6 fault resets (panic, watchdog, CPU lockup) within 10 minutes, the device starts
+    without the COM ports. The `/{com-port}/...` endpoints are then not available (404). The other endpoints
+    (e.g. firmware update, restart, factory reset, core dump) stay available. A restart with `/restart` leaves
+    recovery mode.
 
 servers:
   - url: https://192.168.23.72/api/v1
@@ -42,6 +53,8 @@ paths:
     $ref: "./core/paths/restart.yml"
   /factoryreset:
     $ref: "./core/paths/factoryreset.yml"
+  /coredump:
+    $ref: "./core/paths/coredump.yml"
   /repl:
     $ref: "./mio04-ws/paths/repl.yml"
   /parameter:
@@ -56,6 +69,14 @@ paths:
     $ref: "./uart-ws/paths/parameter.yml"
   /{com-port}/ws:
     $ref: "./uart-ws/paths/ws.yml"
+  /{com-port}/ws-v2:
+    $ref: "./uart-ws/paths/ws-v2.yml"
+  /factory/users/{user}/basic_auth:
+    $ref: "./core/paths/factory_auth_basic.yml"
+  /factory/certificate:
+    $ref: "./core/paths/factory_certificate.yml"
+  /factory/key:
+    $ref: "./core/paths/factory_key.yml"
 
 components:
   securitySchemes:
